@@ -1,0 +1,138 @@
+﻿@model Libreria.Models.Libro
+
+<div class="container mt-3">
+    <h3 class="mb-4">Editar Libro</h3>
+    <form asp-action="Editar" method="post" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <input type="hidden" asp-for="Id" />
+
+        <!-- Campo para el título -->
+        <div class="mb-3">
+            <label asp-for="Titulo" class="form-label">Título</label>
+            <input asp-for="Titulo" class="form-control" required />
+            <div class="invalid-feedback">
+                Por favor, ingrese el título del libro.
+            </div>
+        </div>
+
+        <!-- Campo para el autor -->
+        <div class="mb-3">
+            <label asp-for="Autor" class="form-label">Autor</label>
+            <input asp-for="Autor" class="form-control" required />
+            <div class="invalid-feedback">
+                Por favor, ingrese el nombre del autor.
+            </div>
+        </div>
+
+        <!-- Campo para el precio -->
+        <div class="mb-3">
+            <label asp-for="Precio" class="form-label">Precio</label>
+            <input asp-for="Precio" class="form-control" type="number" step="0.01" required />
+            <div class="invalid-feedback">
+                Por favor, ingrese el precio del libro.
+            </div>
+        </div>
+
+        <!-- Campo para la cantidad -->
+        <div class="mb-3">
+            <label asp-for="Cantidad" class="form-label">Cantidad</label>
+            <input asp-for="Cantidad" class="form-control" type="number" required />
+            <div class="invalid-feedback">
+                Por favor, ingrese la cantidad disponible del libro.
+            </div>
+        </div>
+
+        <!-- Campo para el género -->
+        <div class="mb-3">
+            <label asp-for="Genero" class="form-label">Género</label>
+            <input asp-for="Genero" class="form-control" placeholder="Ingrese el género del libro" required />
+            <div class="invalid-feedback">
+                Por favor, ingrese el género del libro.
+            </div>
+        </div>
+
+        <!-- Campo para las páginas -->
+        <div class="mb-3">
+            <label asp-for="Paginas" class="form-label">Número de Páginas</label>
+            <input asp-for="Paginas" class="form-control" type="number" />
+            <div class="invalid-feedback">
+                Por favor, ingrese el número de páginas del libro.
+            </div>
+        </div>
+
+        <!-- Campo para la encuadernación -->
+        <div class="mb-3">
+            <label asp-for="Encuadernacion" class="form-label">Encuadernación</label>
+            <input asp-for="Encuadernacion" class="form-control" />
+            <div class="invalid-feedback">
+                Por favor, ingrese el tipo de encuadernación del libro.
+            </div>
+        </div>
+
+        <!-- Campo para la sinopsis -->
+        <div class="mb-3">
+            <label asp-for="Sinopsis" class="form-label">Sinopsis</label>
+            <textarea asp-for="Sinopsis" class="form-control" rows="5"></textarea>
+            <div class="invalid-feedback">
+                Por favor, ingrese la sinopsis del libro.
+            </div>
+        </div>
+
+        <!-- Campo para la portada -->
+        <div class="mb-3">
+            <label class="form-label">Portada Actual</label>
+            @if (Model.Portada != null && Model.Portada.Length > 0)
+            {
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Portada)" alt="Portada" class="img-thumbnail" style="max-width: 150px;" />
+            }
+            else
+            {
+                <div class="d-flex justify-content-center align-items-center bg-light" style="max-width: 150px;">
+                    <p class="text-muted">No hay portada disponible.</p>
+                </div>
+            }
+            <label class="form-label mt-3">Actualizar Portada</label>
+            <input type="file" name="portadaFile" class="form-control" />
+            <div class="invalid-feedback">
+                Por favor, suba la portada del libro si desea actualizarla.
+            </div>
+            <img id="portadaPreview" src="" alt="Portada" class="img-thumbnail mt-3" style="max-width: 150px; display: none;" />
+            <script>
+                document.querySelector('input[name="portadaFile"]').addEventListener('change', function () {
+                    var file = this.files[0];
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        var img = document.querySelector('#portadaPreview');
+                        img.src = e.target.result;
+                        img.style.display = 'block';
+                    };
+                    reader.readAsDataURL(file);
+                });
+            </script>
+        </div>
+
+        <!-- Botón para guardar los cambios -->
+        <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save"></i> Guardar
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        // Bootstrap validation script
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault()
+                            event.stopPropagation()
+                        }
+                        form.classList.add('was-validated')
+                    }, false)
+                })
+        })()
+    </script>
+}

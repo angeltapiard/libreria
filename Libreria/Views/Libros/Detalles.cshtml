@@ -1,0 +1,42 @@
+﻿@model Libreria.Models.Libro
+
+<div class="container mt-5">
+    <h3 class="mb-4">Detalles de @Model.Titulo</h3>
+    <div class="card">
+        <div class="row g-0">
+            <!-- Columna para la portada -->
+            <div class="col-md-4 d-flex justify-content-center align-items-center">
+                @if (Model.Portada != null && Model.Portada.Length > 0)
+                {
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Portada)" alt="Portada de @Model.Titulo" class="img-fluid rounded-start" />
+                }
+                else
+                {
+                    <div class="bg-light text-center p-3" style="height: 100%; width: 100%;">
+                        <p class="text-muted">No hay portada disponible.</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Columna para los detalles -->
+            <div class="col-md-8">
+                <div class="card-body">
+                    <h1 class="card-title">@Model.Titulo</h1>
+                    <p class="card-text"><strong>Autor:</strong> @Model.Autor</p>
+                    <p class="card-text"><strong>Precio:</strong> @Model.Precio.ToString("C")</p>
+                    <p class="card-text"><strong>Cantidad:</strong> @Model.Cantidad</p>
+                    <p class="card-text"><strong>Género:</strong> @(Model.Genero ?? "<span class='text-muted'>No especificado</span>")</p>
+                    <p class="card-text"><strong>Número de Páginas:</strong> @(Model.Paginas.HasValue ? Model.Paginas.Value.ToString() : "<span class='text-muted'>No especificado</span>")</p>
+                    <p class="card-text"><strong>Encuadernación:</strong> @(Model.Encuadernacion ?? "<span class='text-muted'>No especificado</span>")</p>
+                    <p class="card-text" style="white-space: pre-wrap;"><strong>Sinopsis:</strong><br /> @(Model.Sinopsis ?? "<span class='text-muted'>No disponible</span>")</p>
+                </div>
+            </div>
+        </div>
+        <!-- Botón para volver a la lista -->
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i> Volver a la lista
+            </a>
+        </div>
+    </div>
+</div>
