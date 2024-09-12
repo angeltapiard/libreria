@@ -3,9 +3,9 @@ using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Libreria.Models;
 using Microsoft.Extensions.Configuration;
-using System.Linq;
 
 namespace Libreria.Controllers
 {
@@ -35,13 +35,13 @@ namespace Libreria.Controllers
                     Libro libro = new Libro
                     {
                         Id = reader.GetInt32(0),
-                        Titulo = reader.GetString(1),
-                        Autor = reader.GetString(2),
+                        Titulo = reader.IsDBNull(1) ? null : reader.GetString(1),
+                        Autor = reader.IsDBNull(2) ? null : reader.GetString(2),
                         Precio = reader.GetDecimal(3),
                         Cantidad = reader.GetInt32(4),
-                        Genero = reader.GetString(5),
+                        GenerosString = reader.IsDBNull(5) ? null : reader.GetString(5),
                         Paginas = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
-                        Encuadernacion = reader.GetString(7),
+                        Encuadernacion = reader.IsDBNull(7) ? null : reader.GetString(7),
                         Portada = reader.IsDBNull(8) ? null : (byte[])reader["Portada"],
                         Sinopsis = reader.IsDBNull(9) ? null : reader.GetString(9)
                     };
@@ -61,7 +61,7 @@ namespace Libreria.Controllers
 
         // Acción para procesar el formulario de agregar libro
         [HttpPost]
-        public IActionResult Crear(Libro libro, IFormFile portadaFile)
+        public IActionResult Crear(Libro libro, IFormFile portadaFile, string[] Generos)
         {
             if (portadaFile != null && portadaFile.Length > 0)
             {
@@ -72,17 +72,19 @@ namespace Libreria.Controllers
                 }
             }
 
+            libro.Generos = Generos != null ? Generos.Select(g => Enum.Parse<GeneroLibro>(g)).ToList() : new List<GeneroLibro>();
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 string query = "INSERT INTO Libros (Titulo, Autor, Precio, Cantidad, Genero, Paginas, Encuadernacion, Portada, Sinopsis) VALUES (@Titulo, @Autor, @Precio, @Cantidad, @Genero, @Paginas, @Encuadernacion, @Portada, @Sinopsis)";
                 SqlCommand cmd = new SqlCommand(query, conn);
-                cmd.Parameters.AddWithValue("@Titulo", libro.Titulo);
-                cmd.Parameters.AddWithValue("@Autor", libro.Autor);
+                cmd.Parameters.AddWithValue("@Titulo", libro.Titulo ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Autor", libro.Autor ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", libro.Precio);
                 cmd.Parameters.AddWithValue("@Cantidad", libro.Cantidad);
-                cmd.Parameters.AddWithValue("@Genero", libro.Genero);
+                cmd.Parameters.AddWithValue("@Genero", libro.GenerosString ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Paginas", libro.Paginas.HasValue ? (object)libro.Paginas.Value : DBNull.Value);
-                cmd.Parameters.AddWithValue("@Encuadernacion", libro.Encuadernacion);
+                cmd.Parameters.AddWithValue("@Encuadernacion", libro.Encuadernacion ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Portada", libro.Portada ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Sinopsis", libro.Sinopsis ?? (object)DBNull.Value);
 
@@ -111,13 +113,13 @@ namespace Libreria.Controllers
                     libro = new Libro
                     {
                         Id = reader.GetInt32(0),
-                        Titulo = reader.GetString(1),
-                        Autor = reader.GetString(2),
+                        Titulo = reader.IsDBNull(1) ? null : reader.GetString(1),
+                        Autor = reader.IsDBNull(2) ? null : reader.GetString(2),
                         Precio = reader.GetDecimal(3),
                         Cantidad = reader.GetInt32(4),
-                        Genero = reader.GetString(5),
+                        GenerosString = reader.IsDBNull(5) ? null : reader.GetString(5),
                         Paginas = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
-                        Encuadernacion = reader.GetString(7),
+                        Encuadernacion = reader.IsDBNull(7) ? null : reader.GetString(7),
                         Portada = reader.IsDBNull(8) ? null : (byte[])reader["Portada"],
                         Sinopsis = reader.IsDBNull(9) ? null : reader.GetString(9)
                     };
@@ -150,13 +152,13 @@ namespace Libreria.Controllers
                     libro = new Libro
                     {
                         Id = reader.GetInt32(0),
-                        Titulo = reader.GetString(1),
-                        Autor = reader.GetString(2),
+                        Titulo = reader.IsDBNull(1) ? null : reader.GetString(1),
+                        Autor = reader.IsDBNull(2) ? null : reader.GetString(2),
                         Precio = reader.GetDecimal(3),
                         Cantidad = reader.GetInt32(4),
-                        Genero = reader.GetString(5),
+                        GenerosString = reader.IsDBNull(5) ? null : reader.GetString(5),
                         Paginas = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
-                        Encuadernacion = reader.GetString(7),
+                        Encuadernacion = reader.IsDBNull(7) ? null : reader.GetString(7),
                         Portada = reader.IsDBNull(8) ? null : (byte[])reader["Portada"],
                         Sinopsis = reader.IsDBNull(9) ? null : reader.GetString(9)
                     };
@@ -173,7 +175,7 @@ namespace Libreria.Controllers
 
         // Acción para procesar la edición de libro
         [HttpPost]
-        public IActionResult Editar(Libro libro, IFormFile portadaFile)
+        public IActionResult Editar(Libro libro, IFormFile portadaFile, string[] Generos)
         {
             if (portadaFile != null && portadaFile.Length > 0)
             {
@@ -198,18 +200,20 @@ namespace Libreria.Controllers
                 }
             }
 
+            libro.Generos = Generos != null ? Generos.Select(g => Enum.Parse<GeneroLibro>(g)).ToList() : new List<GeneroLibro>();
+
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 string query = "UPDATE Libros SET Titulo = @Titulo, Autor = @Autor, Precio = @Precio, Cantidad = @Cantidad, Genero = @Genero, Paginas = @Paginas, Encuadernacion = @Encuadernacion, Portada = @Portada, Sinopsis = @Sinopsis WHERE Id = @Id";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Id", libro.Id);
-                cmd.Parameters.AddWithValue("@Titulo", libro.Titulo);
-                cmd.Parameters.AddWithValue("@Autor", libro.Autor);
+                cmd.Parameters.AddWithValue("@Titulo", libro.Titulo ?? (object)DBNull.Value);
+                cmd.Parameters.AddWithValue("@Autor", libro.Autor ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Precio", libro.Precio);
                 cmd.Parameters.AddWithValue("@Cantidad", libro.Cantidad);
-                cmd.Parameters.AddWithValue("@Genero", libro.Genero);
+                cmd.Parameters.AddWithValue("@Genero", libro.GenerosString ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Paginas", libro.Paginas.HasValue ? (object)libro.Paginas.Value : DBNull.Value);
-                cmd.Parameters.AddWithValue("@Encuadernacion", libro.Encuadernacion);
+                cmd.Parameters.AddWithValue("@Encuadernacion", libro.Encuadernacion ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Portada", libro.Portada ?? (object)DBNull.Value);
                 cmd.Parameters.AddWithValue("@Sinopsis", libro.Sinopsis ?? (object)DBNull.Value);
 
@@ -221,7 +225,6 @@ namespace Libreria.Controllers
         }
 
         // Acción para eliminar un libro
-        [HttpPost]
         public IActionResult Eliminar(int id)
         {
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -229,7 +232,6 @@ namespace Libreria.Controllers
                 string query = "DELETE FROM Libros WHERE Id = @Id";
                 SqlCommand cmd = new SqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@Id", id);
-
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }

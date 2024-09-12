@@ -1,73 +1,145 @@
 ﻿@model IEnumerable<Libreria.Models.Libro>
 
 <div class="container mt-4">
-    <h3 class="mb-4">Listado de Libros</h3>
+    <h3 class="mb-4">Inventario de Libros</h3>
+
+    <!-- Botón Añadir Libro -->
     <a asp-action="Crear" class="btn btn-primary mb-3 btn-lg px-4">
         <i class="bi bi-plus-circle me-2"></i> Añadir Libro
     </a>
 
-    <div class="row">
-        @foreach (var libro in Model)
-        {
-            <div class="col-md-4 mb-4">
-                <div class="card h-100">
-                    <div class="row g-0 h-100">
-                        <!-- Portada del libro -->
-                        <div class="col-md-12 d-flex justify-content-center align-items-center p-3">
-                            @if (libro.Portada != null && libro.Portada.Length > 0)
-                            {
-                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(libro.Portada)" alt="Portada de @libro.Titulo" class="img-fluid rounded" style="max-width: 100%; height: auto;" />
-                            }
-                            else
-                            {
-                                <div class="d-flex justify-content-center align-items-center bg-light" style="width: 100%; height: 200px;">
-                                    <p class="text-muted text-center">No hay portada disponible.</p>
-                                </div>
-                            }
-                        </div>
-
-                        <!-- Detalles del libro -->
-                        <div class="col-md-12">
-                            <div class="card-body">
-                                <h5 class="card-title">@libro.Titulo</h5>
-                                <p class="card-text"><strong>Autor:</strong> @libro.Autor</p>
-                                <p class="card-text"><strong>Precio:</strong> @libro.Precio.ToString("C")</p>
-                                <p class="card-text"><strong>Cantidad:</strong> @libro.Cantidad</p>
-                                <p class="card-text"><strong>Género:</strong> @(string.IsNullOrEmpty(libro.Genero) ? "<span class='text-muted'>No especificado</span>" : libro.Genero)</p>
-                                <p class="card-text"><strong>Páginas:</strong> @(libro.Paginas.HasValue ? libro.Paginas.Value.ToString() : "<span class='text-muted'>No especificado</span>")</p>
-                                <p class="card-text"><strong>Encuadernación:</strong> @(string.IsNullOrEmpty(libro.Encuadernacion) ? "<span class='text-muted'>No especificado</span>" : libro.Encuadernacion)</p>
-                                <p class="card-text" style="white-space: pre-wrap;"><strong>Sinopsis:</strong><br /> @(string.IsNullOrEmpty(libro.Sinopsis) ? "<span class='text-muted'>No disponible</span>" : libro.Sinopsis)</p>
-
-                                <!-- Botones de acción -->
-                                <div class="mt-3">
-                                    <a asp-action="Detalles" asp-route-id="@libro.Id" class="btn btn-info me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Detalles">
-                                        <i class="bi bi-info-circle"></i>
-                                    </a>
-
-                                    <a asp-action="Editar" asp-route-id="@libro.Id" class="btn btn-warning text-white me-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-
-                                    <form asp-action="Eliminar" asp-route-id="@libro.Id" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este libro?');">
-                                        <button type="submit" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar por título, autor o género..." aria-label="Buscar" id="searchInput">
+                <button class="btn btn-outline-primary" type="button" id="searchButton">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
             </div>
-        }
+        </div>
+    </div>
+
+    <!-- Tabla de libros -->
+    <table class="table table-bordered table-hover" id="librosTable">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th scope="col">Portada</th>
+                <th scope="col">Título</th>
+                <th scope="col">Autor</th>
+                <th scope="col">Géneros</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Existencias</th>
+                <!-- Reducir el tamaño de la columna Acciones -->
+                <th scope="col" style="width: 150px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var libro in Model)
+            {
+                <tr>
+                    <!-- Portada -->
+                    <td class="text-center">
+                        @if (libro.Portada != null && libro.Portada.Length > 0)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(libro.Portada)" alt="Portada de @libro.Titulo" class="img-fluid" style="max-width: 100px; height: auto;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center bg-light" style="width: 100px; height: 150px;">
+                                <p class="text-muted text-center">Sin portada</p>
+                            </div>
+                        }
+                    </td>
+
+                    <!-- Título -->
+                    <td>@libro.Titulo</td>
+
+                    <!-- Autor -->
+                    <td>@libro.Autor</td>
+
+                    <!-- Géneros -->
+                    <td>
+                        @(string.IsNullOrEmpty(libro.GenerosString) ? "<span class='text-muted'>No especificado</span>" : libro.GenerosString)
+                    </td>
+
+                    <!-- Precio -->
+                    <td>@libro.Precio.ToString("C")</td>
+
+                    <!-- Cantidad -->
+                    <td>@libro.Cantidad</td>
+
+                    <!-- Acciones -->
+                    <td class="text-center">
+                        <!-- Botón Detalles -->
+                        <a asp-action="Detalles" asp-route-id="@libro.Id" class="btn btn-info text-white btn-sm mb-2 w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Detalles">
+                            <i class="bi bi-eye fw-bold"></i> <strong>Detalles</strong>
+                        </a>
+
+                        <!-- Botón Editar -->
+                        <a asp-action="Editar" asp-route-id="@libro.Id" class="btn btn-warning text-white btn-sm mb-2 w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                            <i class="bi bi-pencil-square fw-bold"></i> <strong>Editar</strong>
+                        </a>
+
+                        <!-- Botón Eliminar -->
+                        <form asp-action="Eliminar" asp-route-id="@libro.Id" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este libro?');">
+                            <button type="submit" class="btn btn-danger text-white btn-sm w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                <i class="bi bi-trash fw-bold"></i> <strong>Eliminar</strong>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Resultados de búsqueda en versión pequeña (se muestra en caso de haber coincidencias) -->
+    <div id="searchResults" class="d-none">
+        <h4>Resultados de búsqueda:</h4>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Portada</th>
+                    <th scope="col">Título</th>
+                    <th scope="col">Autor</th>
+                    <th scope="col">Géneros</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Existencias</th>
+                </tr>
+            </thead>
+            <tbody id="searchResultsBody">
+                <!-- Resultados de búsqueda -->
+            </tbody>
+        </table>
     </div>
 </div>
 
 @section Scripts {
     <script>
-        // Activar los tooltips de Bootstrap
+        // Activar tooltips de Bootstrap
         document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltipTriggerEl) {
             new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Filtro de búsqueda en tiempo real
+        const searchInput = document.getElementById('searchInput');
+        const librosTable = document.getElementById('librosTable').getElementsByTagName('tbody')[0];
+        const rows = librosTable.getElementsByTagName('tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchText = searchInput.value.toLowerCase();
+
+            for (let i = 0; i < rows.length; i++) {
+                let title = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+                let author = rows[i].getElementsByTagName('td')[2].textContent.toLowerCase();
+                let genres = rows[i].getElementsByTagName('td')[3].textContent.toLowerCase();
+
+                if (title.includes(searchText) || author.includes(searchText) || genres.includes(searchText)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
         });
     </script>
 }
