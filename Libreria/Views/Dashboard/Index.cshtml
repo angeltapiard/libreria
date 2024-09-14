@@ -1,0 +1,149 @@
+﻿<!-- Main Content -->
+<div class="container-fluid mt-4">
+    <!-- container-fluid para mantener el diseño general -->
+    <div class="row">
+        @{
+            ViewData["Title"] = "Dashboard";
+        }
+
+        <!-- Cantidad Total de Libros Card (Se mantiene el diseño adecuado) -->
+        <div class="col-xxl-3 col-md-6 mb-4">
+            <div class="card info-card sales-card">
+                <div class="card-body d-flex flex-column justify-content-between">
+                    <h5 class="card-title">Libros <span>| Total General</span></h5>
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <i class="bi bi-book"></i>
+                        </div>
+                        <div class="ps-3">
+                            <h6 class="total-libros">@ViewBag.TotalLibros</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- End Total General Card -->
+    </div>
+
+    <div class="row">
+        <!-- Card for the Bar Chart -->
+        @if (ViewBag.LibrosPorGenero != null && ViewBag.LibrosPorGenero.Genres.Length > 0)
+        {
+            <div class="col-12 mb-4">
+                <!-- Se mantiene el ancho completo para el gráfico -->
+                <div class="card">
+                    <div class="card-body p-0">
+                        <h5 class="card-title p-3">Total de Libros por Genero</h5>
+                        <div class="chart-container" style="position: relative; height:500px; width:100%;">
+                            <canvas id="librosPorGeneroChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add this CSS for styling -->
+<style>
+    /* Mantener el diseño adecuado para la tarjeta */
+    .card {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .card-icon {
+        width: 3rem;
+        height: 3rem;
+        background-color: #D9F9EA;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+        .card-icon i {
+            font-size: 1.5rem;
+            color: #00CD72;
+        }
+
+    .total-libros {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #333; /* Color del texto para mejor visibilidad */
+    }
+
+    /* Ajuste de márgenes y espaciados */
+    .mb-4 {
+        margin-bottom: 1.5rem;
+    }
+
+    /* Ajustes del gráfico */
+    .chart-container {
+        position: relative;
+        height: 500px;
+        width: 100%;
+    }
+
+    /* Mantener los estilos correctos para la tarjeta de total de libros */
+    .card-body {
+        padding: 1rem !important; /* Añadir de nuevo el padding adecuado */
+    }
+
+    canvas {
+        width: 100% !important;
+        height: 100% !important;
+    }
+</style>
+
+<!-- Add Chart.js script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Add the script to initialize the chart -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var ctx = document.getElementById('librosPorGeneroChart').getContext('2d');
+
+        // Define an array of colors for each bar
+        var colors = [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)',
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+            'rgba(255, 206, 86, 0.2)',
+            'rgba(75, 192, 192, 0.2)',
+            'rgba(153, 102, 255, 0.2)',
+            'rgba(255, 159, 64, 0.2)'
+        ];
+
+        var librosPorGeneroChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: @Html.Raw(Json.Serialize(ViewBag.LibrosPorGenero.Genres)),
+                datasets: [{
+                    label: 'Total de Libros',
+                    data: @Html.Raw(Json.Serialize(ViewBag.LibrosPorGenero.Quantities)),
+                    backgroundColor: colors.slice(0, @ViewBag.LibrosPorGenero.Genres.Length),
+                    borderColor: colors.slice(0, @ViewBag.LibrosPorGenero.Genres.Length).map(color => color.replace('0.2', '1')),
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    });
+</script>

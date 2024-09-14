@@ -1,0 +1,127 @@
+﻿@model IEnumerable<Libreria.Models.Separador>
+
+<div class="container mt-4">
+    <h3 class="mb-4">Inventario de Separadores</h3>
+
+    <!-- Botón Añadir Separador -->
+    <a asp-action="Crear" class="btn btn-primary mb-3 btn-lg px-4">
+        <i class="bi bi-plus-circle me-2"></i> Añadir Separador
+    </a>
+
+    <!-- Barra de búsqueda -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Buscar por nombre..." aria-label="Buscar" id="searchInput">
+                <button class="btn btn-outline-primary" type="button" id="searchButton">
+                    <i class="bi bi-search"></i> Buscar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de separadores -->
+    <table class="table table-bordered table-hover" id="separadoresTable">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th scope="col">Foto</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Existencias</th>
+                <!-- Reducir el tamaño de la columna Acciones -->
+                <th scope="col" style="width: 150px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var separador in Model)
+            {
+                <tr>
+                    <!-- Foto -->
+                    <td class="text-center">
+                        @if (separador.Foto != null && separador.Foto.Length > 0)
+                        {
+                            <img src="data:image/jpeg;base64,@Convert.ToBase64String(separador.Foto)" alt="Foto de @separador.Nombre" class="img-fluid" style="max-width: 100px; height: auto;" />
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-center align-items-center bg-light" style="width: 100px; height: 150px;">
+                                <p class="text-muted text-center">Sin foto</p>
+                            </div>
+                        }
+                    </td>
+
+                    <!-- Nombre -->
+                    <td>@separador.Nombre</td>
+
+                    <!-- Precio -->
+                    <td>@separador.Precio.ToString("C")</td>
+
+                    <!-- Cantidad -->
+                    <td>@separador.Cantidad</td>
+
+                    <!-- Acciones -->
+                    <td class="text-center">
+                        
+                        <!-- Botón Editar -->
+                        <a asp-action="Editar" asp-route-id="@separador.SeparadorID" class="btn btn-warning text-white btn-sm mb-2 w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+                            <i class="bi bi-pencil-square fw-bold"></i> <strong>Editar</strong>
+                        </a>
+
+                        <!-- Botón Eliminar -->
+                        <form asp-action="Eliminar" asp-route-id="@separador.SeparadorID" method="post" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este separador?');">
+                            <button type="submit" class="btn btn-danger text-white btn-sm w-100" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar">
+                                <i class="bi bi-trash fw-bold"></i> <strong>Eliminar</strong>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <!-- Resultados de búsqueda en versión pequeña (se muestra en caso de haber coincidencias) -->
+    <div id="searchResults" class="d-none">
+        <h4>Resultados de búsqueda:</h4>
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <th scope="col">Foto</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Existencias</th>
+                </tr>
+            </thead>
+            <tbody id="searchResultsBody">
+                <!-- Resultados de búsqueda -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Activar tooltips de Bootstrap
+        document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(function (tooltipTriggerEl) {
+            new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+
+        // Filtro de búsqueda en tiempo real
+        const searchInput = document.getElementById('searchInput');
+        const separadoresTable = document.getElementById('separadoresTable').getElementsByTagName('tbody')[0];
+        const rows = separadoresTable.getElementsByTagName('tr');
+
+        searchInput.addEventListener('input', function () {
+            const searchText = searchInput.value.toLowerCase();
+
+            for (let i = 0; i < rows.length; i++) {
+                let name = rows[i].getElementsByTagName('td')[1].textContent.toLowerCase();
+
+                if (name.includes(searchText)) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        });
+    </script>
+}

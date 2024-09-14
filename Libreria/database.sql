@@ -10,3 +10,12 @@ CREATE TABLE Libros (
     encuadernacion VARCHAR(100),
     portada VARBINARY(MAX)  -- Columna para almacenar la imagen de la portada
 );
+
+--Tabla Separadores
+CREATE TABLE Separador (
+    SeparadorID INT IDENTITY(1,1) PRIMARY KEY,  
+    Foto VARBINARY(MAX), 
+    Nombre NVARCHAR(100) NOT NULL,  
+    Precio DECIMAL(10, 2) NOT NULL,  
+    Cantidad INT NOT NULL  
+);
