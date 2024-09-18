@@ -20,3 +20,92 @@ html {
 body {
   margin-bottom: 60px;
 }
+body {
+    background-color: #F1F6FD;
+    color: #002A70;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Navbar */
+.navbar {
+    background-color: #FFFFFF;
+    padding: 10px 20px;
+    border-bottom: 1px solid #E5E5E5;
+}
+
+.navbar-brand img {
+    height: 50px;
+}
+
+.navbar-nav {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+    .navbar-nav .nav-link {
+        color: #002A70 !important;
+        font-size: 1rem;
+        font-weight: 500;
+        padding: 5px 20px;
+        margin: 0 15px; /* Aumenta la separación entre enlaces */
+        border-radius: 5px; /* Redondea un poco los bordes */
+        transition: background-color 0.3s ease; /* Transición suave al cambiar el fondo */
+    }
+
+        /* Cambia el color de fondo al pasar el ratón */
+        .navbar-nav .nav-link:hover {
+            color: #FFFFFF !important;
+            background-color: #0056b3; /* Fondo azul oscuro al pasar el ratón */
+        }
+
+        /* Cambia el color de fondo al hacer clic */
+        .navbar-nav .nav-link:active {
+            background-color: #003b8a !important; /* Fondo aún más oscuro al hacer clic */
+            color: #FFFFFF !important;
+        }
+
+/* Botones de iniciar sesión y registrarse */
+.navbar-buttons .btn {
+    margin-left: 15px;
+    font-size: 1rem;
+    padding: 5px 15px;
+}
+
+.btn-login {
+    background-color: #002A70;
+    color: white;
+}
+
+.btn-register {
+    background-color: #FFFFFF;
+    color: #002A70;
+    border: 1px solid #002A70;
+}
+
+.btn-login:hover {
+    background-color: #003b8a;
+}
+
+.btn-register:hover {
+    background-color: #f1f6fd;
+}
+
+.search-icon {
+    color: #002A70;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.content {
+    padding: 40px;
+}
+
+h3 {
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+
+p.lead {
+    font-size: 1.25rem;
+}

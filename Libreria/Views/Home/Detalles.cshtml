@@ -1,0 +1,52 @@
+﻿@model Libreria.Models.Libro
+
+@{
+    Layout = null;
+}
+
+<!-- Incluir el navbar aquí -->
+@Html.Partial("_navbar")
+
+<div class="container mt-5">
+    <div class="card">
+        <div class="row g-0">
+            <!-- Columna para la portada -->
+            <div class="col-md-4 d-flex justify-content-center align-items-center bg-light">
+                @if (Model.Portada != null && Model.Portada.Length > 0)
+                {
+                    <!-- Usar clases de Bootstrap para reducir el tamaño de la portada -->
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Portada)" alt="Portada de @Model.Titulo" class="img-fluid rounded-start w-75" />
+                }
+                else
+                {
+                    <div class="d-flex justify-content-center align-items-center p-3" style="height: 300px; width: 100%; background-color: #f0f0f0;">
+                        <p class="text-muted mb-0">No hay portada disponible.</p>
+                    </div>
+                }
+            </div>
+
+            <!-- Columna para los detalles -->
+            <div class="col-md-8">
+                <div class="card-body text-dark">
+                    <!-- Texto en color negro -->
+                    <h3 class="mb-4">@Model.Titulo</h3>
+                    <p class="card-text">@Model.Autor</p>
+                    <!-- Hacer el precio más grande con Bootstrap -->
+                    <p class="card-text fw-bold" style="font-size: 2rem;">@Model.Precio.ToString("C")</p>
+
+
+                    <p class="card-text"><strong>Disponibles:</strong> @Model.Cantidad</p>
+                    <p class="card-text"><strong>Páginas:</strong> @(Model.Paginas.HasValue ? Model.Paginas.Value.ToString() : "<span class='text-muted'>No especificado</span>")</p>
+                    <p class="card-text"><strong>Encuadernación:</strong> @(Model.Encuadernacion ?? "<span class='text-muted'>No especificado</span>")</p>
+                    <p class="card-text" style="white-space: pre-wrap;"><strong>Sinopsis:</strong><br /> @(Model.Sinopsis ?? "<span class='text-muted'>No disponible</span>")</p>
+                </div>
+            </div>
+        </div>
+        <!-- Botón para volver a la lista -->
+        <div class="card-footer text-end">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="bi bi-arrow-left-circle me-2"></i> Volver a la lista
+            </a>
+        </div>
+    </div>
+</div>

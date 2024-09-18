@@ -3,7 +3,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 
 namespace Libreria.Controllers
@@ -21,54 +20,72 @@ namespace Libreria.Controllers
         public IActionResult Index()
         {
             int totalLibros = 0;
+            int totalSeparadores = 0;  // Aquí debe ser totalSeparador en singular
             var librosPorGenero = new Dictionary<string, int>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
 
-                // Obtener el total de libros
-                string queryTotal = "SELECT SUM(Cantidad) FROM Libros";
-                using (SqlCommand cmdTotal = new SqlCommand(queryTotal, conn))
+                try
                 {
-                    var resultTotal = cmdTotal.ExecuteScalar();
-                    totalLibros = resultTotal != DBNull.Value ? Convert.ToInt32(resultTotal) : 0;
-                }
-
-                // Obtener la cantidad de libros por género
-                string queryGenero = @"
-                    SELECT Genero, COUNT(*) AS Cantidad
-                    FROM (
-                        SELECT TRIM(value) AS Genero
-                        FROM Libros
-                        CROSS APPLY STRING_SPLIT(Genero, ',')
-                    ) AS Gen
-                    GROUP BY Genero";
-
-                using (SqlCommand cmdGenero = new SqlCommand(queryGenero, conn))
-                {
-                    using (var reader = cmdGenero.ExecuteReader())
+                    // Obtener el total de libros
+                    string queryTotalLibros = "SELECT SUM(Cantidad) FROM Libros";
+                    using (SqlCommand cmdTotalLibros = new SqlCommand(queryTotalLibros, conn))
                     {
-                        while (reader.Read())
-                        {
-                            string genero = reader.GetString(0).Trim();
-                            int cantidad = reader.GetInt32(1);
+                        var resultTotalLibros = cmdTotalLibros.ExecuteScalar();
+                        totalLibros = resultTotalLibros != DBNull.Value ? Convert.ToInt32(resultTotalLibros) : 0;
+                    }
 
-                            if (librosPorGenero.ContainsKey(genero))
+                    // Obtener el total de separadores (tabla `Separador` en singular)
+                    string queryTotalSeparador = "SELECT SUM(Cantidad) FROM Separador";  // Cambiado a singular
+                    using (SqlCommand cmdTotalSeparador = new SqlCommand(queryTotalSeparador, conn))
+                    {
+                        var resultTotalSeparador = cmdTotalSeparador.ExecuteScalar();
+                        totalSeparadores = resultTotalSeparador != DBNull.Value ? Convert.ToInt32(resultTotalSeparador) : 0;
+                    }
+
+                    // Obtener la cantidad de libros por género
+                    string queryGenero = @"
+                        SELECT Genero, COUNT(*) AS Cantidad
+                        FROM (
+                            SELECT TRIM(value) AS Genero
+                            FROM Libros
+                            CROSS APPLY STRING_SPLIT(Genero, ',')
+                        ) AS Gen
+                        GROUP BY Genero";
+
+                    using (SqlCommand cmdGenero = new SqlCommand(queryGenero, conn))
+                    {
+                        using (var reader = cmdGenero.ExecuteReader())
+                        {
+                            while (reader.Read())
                             {
-                                librosPorGenero[genero] += cantidad;
-                            }
-                            else
-                            {
-                                librosPorGenero[genero] = cantidad;
+                                string genero = reader.GetString(0).Trim();
+                                int cantidad = reader.GetInt32(1);
+
+                                if (librosPorGenero.ContainsKey(genero))
+                                {
+                                    librosPorGenero[genero] += cantidad;
+                                }
+                                else
+                                {
+                                    librosPorGenero[genero] = cantidad;
+                                }
                             }
                         }
                     }
                 }
+                catch (SqlException ex)
+                {
+                    // Log o manejo de cualquier otro error SQL
+                    throw;
+                }
             }
 
-            // Pasar el total de libros y libros por género a la vista
+            // Pasar el total de libros y separadores a la vista
             ViewBag.TotalLibros = totalLibros;
+            ViewBag.TotalSeparadores = totalSeparadores;
 
             // Preparar los datos para el gráfico
             ViewBag.LibrosPorGenero = new
