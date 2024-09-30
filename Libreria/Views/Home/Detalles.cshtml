@@ -2,9 +2,23 @@
 
 @{
     Layout = null;
+    var librosRelacionados = ViewData["LibrosRelacionados"] as List<Libreria.Models.Libro>;
 }
 
-<!-- Incluir el navbar aquí -->
+<!-- Estilos para el efecto hover del ícono de carrito -->
+<style>
+    .btn-cart-icon {
+        font-size: 1.5rem;
+        color: blue;
+        transition: color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+        .btn-cart-icon:hover {
+            color: #00BFFF; /* Azul celeste */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
+        }
+</style>
+
 @Html.Partial("_navbar")
 
 <div class="container mt-5">
@@ -14,8 +28,7 @@
             <div class="col-md-4 d-flex justify-content-center align-items-center bg-light">
                 @if (Model.Portada != null && Model.Portada.Length > 0)
                 {
-                    <!-- Usar clases de Bootstrap para reducir el tamaño de la portada -->
-                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Portada)" alt="Portada de @Model.Titulo" class="img-fluid rounded-start w-75" />
+                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.Portada)" alt="Portada del libro @Model.Titulo por @Model.Autor" class="img-fluid rounded-start w-75" />
                 }
                 else
                 {
@@ -28,25 +41,120 @@
             <!-- Columna para los detalles -->
             <div class="col-md-8">
                 <div class="card-body text-dark">
-                    <!-- Texto en color negro -->
                     <h3 class="mb-4">@Model.Titulo</h3>
                     <p class="card-text">@Model.Autor</p>
-                    <!-- Hacer el precio más grande con Bootstrap -->
                     <p class="card-text fw-bold" style="font-size: 2rem;">@Model.Precio.ToString("C")</p>
-
 
                     <p class="card-text"><strong>Disponibles:</strong> @Model.Cantidad</p>
                     <p class="card-text"><strong>Páginas:</strong> @(Model.Paginas.HasValue ? Model.Paginas.Value.ToString() : "<span class='text-muted'>No especificado</span>")</p>
                     <p class="card-text"><strong>Encuadernación:</strong> @(Model.Encuadernacion ?? "<span class='text-muted'>No especificado</span>")</p>
-                    <p class="card-text" style="white-space: pre-wrap;"><strong>Sinopsis:</strong><br /> @(Model.Sinopsis ?? "<span class='text-muted'>No disponible</span>")</p>
+
+                    <p class="card-text">
+                        <strong>Sinopsis:</strong><br />
+                        @if (!string.IsNullOrEmpty(Model.Sinopsis))
+                        {
+                            @Model.Sinopsis
+                        }
+                        else
+                        {
+                            <span class="text-muted">No disponible</span>
+                        }
+                    </p>
+
+                    <!-- Muestra los géneros del libro -->
+                    <p class="card-text"><strong>Géneros:</strong> @(Model.Generos.Any() ? string.Join(", ", Model.Generos) : "<span class='text-muted'>No especificado</span>")</p>
+
+                    <!-- Formulario para agregar al carrito -->
+                    <form asp-action="AgregarLibro" asp-controller="Carrito" method="post" class="d-inline" class="carrito-icono">
+                        <input type="hidden" name="libroId" value="@Model.Id" /> <!-- Usar el ID del libro actual -->
+                        <button type="submit" class="btn btn-primary" title="Agregar al carrito">
+                            Agregar     <i class="bi bi-cart-plus"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
-        <!-- Botón para volver a la lista -->
-        <div class="card-footer text-end">
-            <a asp-action="Index" class="btn btn-secondary">
-                <i class="bi bi-arrow-left-circle me-2"></i> Volver a la lista
+    </div>
+</div>
+
+<!-- Sección de los libros relacionados -->
+@if (librosRelacionados != null && librosRelacionados.Any())
+{
+    <div class="container mt-5">
+        <h5 class="text-dark fw-bold text-center mt-5" style="font-size: 1.50rem;">Libros relacionados</h5>
+        @for (int i = 0; i < librosRelacionados.Count; i += 3)
+        {
+            <div class="row">
+                @for (int j = i; j < i + 3 && j < librosRelacionados.Count; j++)
+                {
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <a asp-action="Detalles" asp-route-id="@librosRelacionados[j].Id" class="text-decoration-none text-dark">
+                            <div class="card d-flex flex-row h-100">
+                                @if (librosRelacionados[j].Portada != null && librosRelacionados[j].Portada.Length > 0)
+                                {
+                                    <img src="data:image/jpeg;base64,@Convert.ToBase64String(librosRelacionados[j].Portada)" alt="@librosRelacionados[j].Titulo" class="img-fluid" style="width: 120px; height: 180px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <img src="~/img/no-portada.png" alt="No hay portada disponible" class="img-fluid" style="width: 120px; height: 180px; object-fit: cover;" />
+                                }
+                                <div class="card-body d-flex flex-column">
+                                    <h6 class="card-title mb-2" style="overflow: hidden; text-overflow: ellipsis; white-space: normal; margin: 0;">@librosRelacionados[j].Titulo</h6>
+                                    <p class="card-text text-muted small mb-2">@librosRelacionados[j].Autor</p>
+                                    <p class="card-text text-primary small mb-1">RD @librosRelacionados[j].Precio.ToString("C")</p>
+                                    <!-- Formulario para agregar al carrito -->
+                                    <form asp-action="AgregarLibro" asp-controller="Carrito" method="post" class="d-inline" class="carrito-icono">
+                                        <input type="hidden" name="libroId" value="@librosRelacionados[j].Id" />
+                                        <button type="submit" class="btn p-0" title="Agregar al carrito">
+                                            <i class="bi bi-cart-plus btn-cart-icon"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+}
+
+<br />
+<br />
+
+<!-- Footer con íconos de redes y contacto -->
+<footer style="background-color: #002B70;" class="text-white text-center py-4">
+    <div class="container">
+        <p>&copy; 2024 Librería El Maestro. Todos los derechos reservados.</p>
+
+        <p>
+            <i class="bi bi-telephone-fill"></i>
+            <a href="tel:+18096817079" class="text-white text-decoration-none"> 809-681-7079</a>
+        </p>
+
+        <p>
+            <i class="bi bi-envelope-fill"></i>
+            <a href="mailto:libmaestro@hotmail.com" class="text-white text-decoration-none"> libmaestro@hotmail.com</a>
+        </p>
+
+        <p>
+            <i class="bi bi-geo-alt-fill"></i>
+            Dirección: C/Padre Castellanos No. 91, Ensanche Espaillat, Santo Domingo, República Dominicana.
+        </p>
+
+        <hr class="border border-light my-4">
+
+        <p>Síguenos en nuestras redes sociales:</p>
+        <div>
+            <a href="https://facebook.com" class="text-white me-3">
+                <i class="bi bi-facebook" style="font-size: 2rem;"></i>
+            </a>
+            <a href="https://instagram.com" class="text-white">
+                <i class="bi bi-instagram" style="font-size: 2rem;"></i>
             </a>
         </div>
     </div>
-</div>
+</footer>
+
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">

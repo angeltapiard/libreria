@@ -69,77 +69,27 @@ CREATE TABLE ItemsPedido (
     Cantidad INT NOT NULL CHECK (Cantidad > 0)
 );
 
---CREATE PROCEDURE RegistrarUsuario
---    @Nombre NVARCHAR(100),
---    @Apellidos NVARCHAR(100),
---    @Email NVARCHAR(255),
---    @Contraseña NVARCHAR(255),
---    @Telefono NVARCHAR(15),
---    @FechaNacimiento DATE,
---    @Genero NVARCHAR(10),
---    @Rol NVARCHAR(50)
---AS
---BEGIN
---    SET NOCOUNT ON;
+CREATE PROCEDURE RegistrarUsuario
+    @Nombre NVARCHAR(100),
+    @Apellidos NVARCHAR(100),
+    @Email NVARCHAR(255),
+    @Contraseña NVARCHAR(255),
+    @Telefono NVARCHAR(15),
+    @FechaNacimiento DATE,
+    @Genero NVARCHAR(10),
+    @Rol NVARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
 
---    -- Verificar si el correo ya existe
---    IF EXISTS (SELECT 1 FROM Usuarios WHERE Email = @Email)
---    BEGIN
---        RAISERROR('El correo electrónico ya está en uso.', 16, 1);
---        RETURN;
---    END
+    -- Verificar si el correo ya existe
+    IF EXISTS (SELECT 1 FROM Usuarios WHERE Email = @Email)
+    BEGIN
+        RAISERROR('El correo electrónico ya está en uso.', 16, 1);
+        RETURN;
+    END
 
---    -- Insertar nuevo usuario
---    INSERT INTO Usuarios (Nombre, Apellidos, Email, Contraseña, Telefono, FechaNacimiento, Genero, Rol)
---    VALUES (@Nombre, @Apellidos, @Email, @Contraseña, @Telefono, @FechaNacimiento, @Genero, @Rol);
---END;
-
-
-
---CREATE PROCEDURE ValidarUsuario
---    @Email NVARCHAR(255),
---    @Contraseña NVARCHAR(255),
---    @Resultado BIT OUTPUT
---AS
---BEGIN
---    SET NOCOUNT ON;
-
---    DECLARE @Count INT;
-
---    SELECT @Count = COUNT(*)
---    FROM Usuarios -- Asegúrate de que este sea el nombre correcto de tu tabla de usuarios
---    WHERE Email = @Email AND Contraseña = @Contraseña; -- Asegúrate de que la contraseña esté encriptada si es necesario
-
---    IF @Count > 0
---        SET @Resultado = 1; -- Usuario válido
-
-
---    ELSE
---        SET @Resultado = 0; -- Usuario no válido
---END;
-
-
-
---CREATE PROCEDURE ObtenerRolIDUsuario
---    @Email NVARCHAR(255),
---    @Rol NVARCHAR(50) OUTPUT
---AS
---BEGIN
---    SET NOCOUNT ON;
-
---    SELECT @Rol = Rol FROM Usuarios WHERE Email = @Email; -- Asegúrate de que 'Rol' sea el nombre correcto de la columna en tu tabla
---END;
-
-
---CREATE PROCEDURE ObtenerNombreApellidoUsuario
---    @Email NVARCHAR(100),
---    @Nombre NVARCHAR(50) OUTPUT,
---    @Apellidos NVARCHAR(50) OUTPUT
---AS
---BEGIN
---    SELECT @Nombre = Nombre, @Apellidos = Apellidos
---    FROM Usuarios
---    WHERE Email = @Email;
---END
-
-
+    -- Insertar nuevo usuario
+    INSERT INTO Usuarios (Nombre, Apellidos, Email, Contraseña, Telefono, FechaNacimiento, Genero, Rol)
+    VALUES (@Nombre, @Apellidos, @Email, @Contraseña, @Telefono, @FechaNacimiento, @Genero, @Rol);
+END;

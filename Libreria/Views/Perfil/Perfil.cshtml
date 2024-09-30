@@ -1,0 +1,48 @@
+﻿@model Libreria.Models.Usuario
+@{
+    Layout = null;
+}
+@Html.Partial("_navbar")
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="~/css/bootstrap-icons.css" rel="stylesheet">
+<div class="container mt-5">
+    <h2 class="mb-4">Mi Perfil</h2>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Información del Usuario</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3"><strong>Nombre:</strong></dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3"><strong>Apellidos:</strong></dt>
+                <dd class="col-sm-9">@Model.Apellidos</dd>
+
+                <dt class="col-sm-3"><strong>Email:</strong></dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3"><strong>Teléfono:</strong></dt>
+                <dd class="col-sm-9">@Model.Telefono</dd>
+
+                <dt class="col-sm-3"><strong>Fecha de Nacimiento:</strong></dt>
+                <dd class="col-sm-9">@Model.FechaNacimiento?.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3"><strong>Género:</strong></dt>
+                <dd class="col-sm-9">@Model.Genero</dd>
+
+                <dt class="col-sm-3"><strong>Rol:</strong></dt>
+                <dd class="col-sm-9">@Model.Rol</dd>
+            </dl>
+
+        </div>
+       @*  <div class="card-footer d-flex justify-content-start">
+            <a asp-action="EditarPerfil" asp-controller="Perfil" class="btn btn-primary btn-sm btn-lg rounded-pill" role="button">
+                <i class="bi bi-pencil-fill"></i> Editar
+            </a>
+        </div> *@
+
+        
+    </div>
+</div>

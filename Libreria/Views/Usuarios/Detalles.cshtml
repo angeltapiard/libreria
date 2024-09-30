@@ -1,0 +1,38 @@
+﻿@model Libreria.Models.Usuario
+
+<div class="container mt-5">
+    <h2 class="mb-4">Detalles del Usuario</h2>
+
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h5 class="mb-0">Información del Usuario</h5>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3"><strong>Nombre:</strong></dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3"><strong>Apellidos:</strong></dt>
+                <dd class="col-sm-9">@Model.Apellidos</dd>
+
+                <dt class="col-sm-3"><strong>Email:</strong></dt>
+                <dd class="col-sm-9">@Model.Email</dd>
+
+                <dt class="col-sm-3"><strong>Teléfono:</strong></dt>
+                <dd class="col-sm-9">@Model.Telefono</dd>
+
+                <dt class="col-sm-3"><strong>Fecha de Nacimiento:</strong></dt>
+                <dd class="col-sm-9">@Model.FechaNacimiento?.ToString("dd/MM/yyyy")</dd>
+
+                <dt class="col-sm-3"><strong>Género:</strong></dt>
+                <dd class="col-sm-9">@Model.Genero</dd>
+
+                <dt class="col-sm-3"><strong>Rol:</strong></dt>
+                <dd class="col-sm-9">@Model.Rol</dd>
+            </dl>
+        </div>
+        <div class="card-footer text-center">
+            <a href="@Url.Action("Index")" class="btn btn-primary">Volver a la lista</a>
+        </div>
+    </div>
+</div>

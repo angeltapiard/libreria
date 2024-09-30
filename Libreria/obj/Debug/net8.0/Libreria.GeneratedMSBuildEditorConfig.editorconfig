@@ -18,6 +18,10 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\user\OneDrive - Universidad Autonoma de Santo Domingo\Escritorio\Libreria\Libreria\Libreria
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Carrito/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2Fycml0b1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Dashboard/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -26,12 +30,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhbGxlcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Home/DetallesSeparador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxEZXRhbGxlc1NlcGFyYWRvci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Home/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Home/Privacy.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Home/VerTodosLosLibros.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxWZXJUb2Rvc0xvc0xpYnJvcy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Home/VerTodosLosSeparadores.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxWZXJUb2Rvc0xvc1NlcGFyYWRvcmVzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Info/club.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5mb1xjbHViLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Info/sucursal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSW5mb1xzdWN1cnNhbC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Libros/Crear.cshtml]
@@ -50,6 +74,30 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlicm9zXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Libros/PorGenero.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTGlicm9zXFBvckdlbmVyby5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Login/AccessDenied.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cQWNjZXNzRGVuaWVkLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Login/Iniciar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cSW5pY2lhci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Login/Registrar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTG9naW5cUmVnaXN0cmFyLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Perfil/EditarPerfil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyZmlsXEVkaXRhclBlcmZpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Perfil/Perfil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUGVyZmlsXFBlcmZpbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Separadores/Crear.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwYXJhZG9yZXNcQ3JlYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -62,8 +110,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwYXJhZG9yZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Separadores/separador.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2VwYXJhZG9yZXNcc2VwYXJhZG9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Shared/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Shared/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Shared/_navbar.cshtml]
@@ -72,6 +128,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Shared/_ValidationScriptsPartial.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Usuarios/AsignarRol.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQXNpZ25hclJvbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Usuarios/Detalles.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGV0YWxsZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/Usuarios/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/user/OneDrive - Universidad Autonoma de Santo Domingo/Escritorio/Libreria/Libreria/Libreria/Views/_ViewImports.cshtml]

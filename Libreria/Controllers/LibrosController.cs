@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using Libreria.Models;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Http;
 
 namespace Libreria.Controllers
 {
@@ -16,6 +17,67 @@ namespace Libreria.Controllers
         public LibrosController(IConfiguration configuration)
         {
             _connectionString = configuration.GetConnectionString("DefaultConnection");
+        }
+
+        // Acción para mostrar libros por género con paginación
+        public IActionResult PorGenero(string genero, int pagina = 1)
+        {
+            int librosPorPagina = 9; // Número de libros por página
+            List<Libro> libros = new List<Libro>();
+            int totalLibros = 0;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string countQuery = "SELECT COUNT(*) FROM Libros WHERE CHARINDEX(@Genero, Genero) > 0";
+                SqlCommand countCmd = new SqlCommand(countQuery, conn);
+                countCmd.Parameters.AddWithValue("@Genero", genero);
+                conn.Open();
+                totalLibros = (int)countCmd.ExecuteScalar();
+
+                string query = @"
+                    SELECT Id, Titulo, Autor, Precio, Cantidad, Genero, Paginas, Encuadernacion, Portada, Sinopsis
+                    FROM Libros
+                    WHERE CHARINDEX(@Genero, Genero) > 0
+                    ORDER BY Titulo
+                    OFFSET @Offset ROWS FETCH NEXT @Fetch ROWS ONLY";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Genero", genero);
+                cmd.Parameters.AddWithValue("@Offset", (pagina - 1) * librosPorPagina);
+                cmd.Parameters.AddWithValue("@Fetch", librosPorPagina);
+
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    Libro libro = new Libro
+                    {
+                        Id = reader.GetInt32(0),
+                        Titulo = reader.IsDBNull(1) ? null : reader.GetString(1),
+                        Autor = reader.IsDBNull(2) ? null : reader.GetString(2),
+                        Precio = reader.GetDecimal(3),
+                        Cantidad = reader.GetInt32(4),
+                        GenerosString = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        Paginas = reader.IsDBNull(6) ? (int?)null : reader.GetInt32(6),
+                        Encuadernacion = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        Portada = reader.IsDBNull(8) ? null : (byte[])reader["Portada"],
+                        Sinopsis = reader.IsDBNull(9) ? null : reader.GetString(9)
+                    };
+
+                    libros.Add(libro);
+                }
+            }
+
+            var viewModel = new LibrosViewModel
+            {
+                Libros = libros,
+                PaginaActual = pagina,
+                TotalPaginas = (int)Math.Ceiling((double)totalLibros / librosPorPagina)
+            };
+
+            ViewBag.Genero = genero; // Asignar el nombre del género al ViewBag
+
+            return View(viewModel);
         }
 
         // Acción para mostrar la lista de libros
@@ -193,10 +255,8 @@ namespace Libreria.Controllers
                     string query = "SELECT Portada FROM Libros WHERE Id = @Id";
                     SqlCommand cmd = new SqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@Id", libro.Id);
-
                     conn.Open();
-                    var currentPortada = cmd.ExecuteScalar();
-                    libro.Portada = currentPortada as byte[];
+                    libro.Portada = (byte[])cmd.ExecuteScalar();
                 }
             }
 
@@ -237,6 +297,28 @@ namespace Libreria.Controllers
             }
 
             return RedirectToAction("Index");
+        }
+
+        // Acción para obtener la portada del libro
+        public IActionResult GetPortada(int id)
+        {
+            byte[] portada = null;
+
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                string query = "SELECT Portada FROM Libros WHERE Id = @Id";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@Id", id);
+                conn.Open();
+                portada = (byte[])cmd.ExecuteScalar();
+            }
+
+            if (portada == null)
+            {
+                return NotFound();
+            }
+
+            return File(portada, "image/jpeg");
         }
     }
 }

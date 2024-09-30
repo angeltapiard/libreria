@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -20,7 +21,8 @@ namespace Libreria.Controllers
         public IActionResult Index()
         {
             int totalLibros = 0;
-            int totalSeparadores = 0;  // Aquí debe ser totalSeparador en singular
+            int totalSeparadores = 0;
+            int totalUsuarios = 0; // Agregada la variable totalUsuarios
             var librosPorGenero = new Dictionary<string, int>();
 
             using (SqlConnection conn = new SqlConnection(_connectionString))
@@ -37,23 +39,31 @@ namespace Libreria.Controllers
                         totalLibros = resultTotalLibros != DBNull.Value ? Convert.ToInt32(resultTotalLibros) : 0;
                     }
 
-                    // Obtener el total de separadores (tabla `Separador` en singular)
-                    string queryTotalSeparador = "SELECT SUM(Cantidad) FROM Separador";  // Cambiado a singular
+                    // Obtener el total de separadores
+                    string queryTotalSeparador = "SELECT SUM(Cantidad) FROM Separador";
                     using (SqlCommand cmdTotalSeparador = new SqlCommand(queryTotalSeparador, conn))
                     {
                         var resultTotalSeparador = cmdTotalSeparador.ExecuteScalar();
                         totalSeparadores = resultTotalSeparador != DBNull.Value ? Convert.ToInt32(resultTotalSeparador) : 0;
                     }
 
+                    // Obtener el total de usuarios
+                    string queryTotalUsuarios = "SELECT COUNT(*) FROM Usuarios"; // Cambiar 'Usuarios' por el nombre real de la tabla si es diferente
+                    using (SqlCommand cmdTotalUsuarios = new SqlCommand(queryTotalUsuarios, conn))
+                    {
+                        var resultTotalUsuarios = cmdTotalUsuarios.ExecuteScalar();
+                        totalUsuarios = resultTotalUsuarios != DBNull.Value ? Convert.ToInt32(resultTotalUsuarios) : 0;
+                    }
+
                     // Obtener la cantidad de libros por género
                     string queryGenero = @"
-                        SELECT Genero, COUNT(*) AS Cantidad
-                        FROM (
-                            SELECT TRIM(value) AS Genero
-                            FROM Libros
-                            CROSS APPLY STRING_SPLIT(Genero, ',')
-                        ) AS Gen
-                        GROUP BY Genero";
+                SELECT Genero, COUNT(*) AS Cantidad
+                FROM (
+                    SELECT TRIM(value) AS Genero
+                    FROM Libros
+                    CROSS APPLY STRING_SPLIT(Genero, ',')
+                ) AS Gen
+                GROUP BY Genero";
 
                     using (SqlCommand cmdGenero = new SqlCommand(queryGenero, conn))
                     {
@@ -83,9 +93,10 @@ namespace Libreria.Controllers
                 }
             }
 
-            // Pasar el total de libros y separadores a la vista
+            // Pasar el total de libros, separadores y usuarios a la vista
             ViewBag.TotalLibros = totalLibros;
             ViewBag.TotalSeparadores = totalSeparadores;
+            ViewBag.TotalUsuarios = totalUsuarios; // Agregada la variable TotalUsuarios
 
             // Preparar los datos para el gráfico
             ViewBag.LibrosPorGenero = new
@@ -96,5 +107,6 @@ namespace Libreria.Controllers
 
             return View();
         }
+
     }
 }
