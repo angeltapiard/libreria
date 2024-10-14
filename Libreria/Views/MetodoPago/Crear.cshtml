@@ -1,0 +1,220 @@
+﻿@model Libreria.Models.MetodoPago
+@{
+    Layout = null;
+}
+@Html.Partial("_navbar")
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="~/css/bootstrap-icons.css" rel="stylesheet">
+<link rel="stylesheet" href="@Url.Content("~/css/crear.css")">
+
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0 text-center" style="font-size: 1.5em;">Método de Pago</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <!-- Tarjeta de Crédito -->
+                    <div class="credit-card">
+                        <div class="card-header">
+                            <div class="card-logo">
+                                <span class="bi bi-visa" style="font-size: 2.5em; color: white; margin-right: 10px;"></span>
+                                <span class="bi bi-mastercard" style="font-size: 2.5em; color: white;"></span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="chip"></div>
+                            <div class="card-number" id="card-number">**** **** **** ****</div>
+                            <div class="card-name" id="card-name">NOMBRE TITULAR</div>
+                            <div class="card-expiry" id="card-expiry">MM/AA</div>
+                        </div>
+                        <div class="card-cvc" id="card-cvc">CVC</div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <form asp-action="Crear" method="post" class="needs-validation" novalidate>
+                        <!-- Campo para el tipo de tarjeta -->
+                        <div class="mb-3">
+                            <label class="form-label">Tipo de Tarjeta</label>
+                            <select class="form-select" name="TipoTarjeta" required>
+                                <option value="" disabled selected>Seleccione una opción</option>
+                                <option value="debito-visa">Débito - Visa</option>
+                                <option value="debito-mastercard">Débito - Mastercard</option>
+                                <option value="debito-american-express">Débito - American Express</option>
+                                <option value="credito-visa">Crédito - Visa</option>
+                                <option value="credito-mastercard">Crédito - Mastercard</option>
+                                <option value="credito-american-express">Crédito - American Express</option>
+                            </select>
+                            <div class="invalid-feedback">
+                                Por favor, seleccione el tipo de tarjeta.
+                            </div>
+                        </div>
+
+                        <!-- Campo para el número de tarjeta -->
+                        <div class="mb-3">
+                            <label asp-for="NumeroTarjeta" class="form-label">Número de Tarjeta</label>
+                            <input asp-for="NumeroTarjeta"
+                                   class="form-control"
+                                   required
+                                   maxlength="19"
+                                   oninput="formatCardNumber(this); updateCardNumber(this.value);"
+                                   placeholder="1234 5678 9012 3456" />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese el número de tarjeta.
+                            </div>
+                        </div>
+
+                        <!-- Campo para el titular de la tarjeta -->
+                        <div class="mb-3">
+                            <label asp-for="TitularTarjeta" class="form-label">Titular de la Tarjeta</label>
+                            <input asp-for="TitularTarjeta"
+                                   class="form-control"
+                                   required
+                                   oninput="updateCardName(this.value)" />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese el nombre del titular de la tarjeta.
+                            </div>
+                        </div>
+
+                        <!-- Campo para la fecha de vencimiento (Mes/Año) -->
+                        <div class="mb-3">
+                            <label asp-for="FechaVencimiento" class="form-label">Fecha de Vencimiento (MM/AA)</label>
+                            <input asp-for="FechaVencimiento"
+                                   class="form-control"
+                                   required
+                                   maxlength="5"
+                                   oninput="formatExpiryDate(this); updateCardExpiry(this.value);"
+                                   placeholder="MM/AA" />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese la fecha de vencimiento en el formato MM/AA.
+                            </div>
+                        </div>
+
+                        <!-- Campo para el CVC -->
+                        <div class="mb-3">
+                            <label asp-for="CVC" class="form-label">CVC</label>
+                            <input asp-for="CVC"
+                                   class="form-control"
+                                   required
+                                   pattern="^\d{3}$"
+                                   maxlength="3"
+                                   oninput="this.value=this.value.replace(/[^0-9]/g,''); updateCardCVC(this.value);" />
+                            <div class="invalid-feedback">
+                                Por favor, ingrese el CVC de la tarjeta.
+                            </div>
+                        </div>
+
+                        <!-- Mensaje de seguridad -->
+                        <div class="alert alert-info">
+                            Todos los datos de pago se procesan de manera segura y están cifrados para su protección.
+                        </div>
+
+                        <!-- Botón para guardar el método de pago -->
+                        <div class="text-end">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <i class="fas fa-credit-card"></i> PAGAR AHORA
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<!-- Footer con íconos de redes y contacto -->
+<footer style="background-color: #002B70;" class="text-white text-center py-4">
+    <div class="container">
+        <p>&copy; 2024 Librería El Maestro. Todos los derechos reservados.</p>
+
+        <p>
+            <i class="bi bi-telephone-fill"></i>
+            <a href="tel:+18096817079" class="text-white text-decoration-none"> 809-681-7079</a>
+        </p>
+
+        <p>
+            <i class="bi bi-envelope-fill"></i>
+            <a href="mailto:libmaestro@hotmail.com" class="text-white text-decoration-none"> libmaestro@hotmail.com</a>
+        </p>
+
+        <p>
+            <i class="bi bi-geo-alt-fill"></i>
+            Dirección: C/Padre Castellanos No. 91, Ensanche Espaillat, Santo Domingo, República Dominicana.
+        </p>
+
+        <hr class="border border-light my-4">
+
+        <p>Síguenos en nuestras redes sociales:</p>
+        <div>
+            <a href="https://facebook.com" class="text-white me-3">
+                <i class="bi bi-facebook" style="font-size: 2rem;"></i>
+            </a>
+            <a href="https://instagram.com" class="text-white">
+                <i class="bi bi-instagram" style="font-size: 2rem;"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Función para formatear el número de la tarjeta
+    function formatCardNumber(input) {
+        let value = input.value.replace(/\D/g, '');
+        let formattedValue = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+        input.value = formattedValue.trim();
+    }
+
+    // Función para actualizar el número de la tarjeta en la representación
+    function updateCardNumber(value) {
+        const cardNumberDisplay = document.getElementById('card-number');
+        cardNumberDisplay.innerText = value ? value : '**** **** **** ****';
+    }
+
+    // Función para formatear la fecha de vencimiento
+    function formatExpiryDate(input) {
+        let value = input.value.replace(/\D/g, '');
+        if (value.length >= 2) {
+            value = value.substring(0, 2) + '/' + value.substring(2);
+        }
+        input.value = value.substring(0, 5);
+    }
+
+    // Función para actualizar la fecha de vencimiento en la representación
+    function updateCardExpiry(value) {
+        const cardExpiryDisplay = document.getElementById('card-expiry');
+        cardExpiryDisplay.innerText = value ? value : 'MM/AA';
+    }
+
+    // Función para actualizar el nombre en la representación
+    function updateCardName(value) {
+        const cardNameDisplay = document.getElementById('card-name');
+        cardNameDisplay.innerText = value ? value : 'NOMBRE TITULAR';
+    }
+
+    // Función para actualizar el CVC en la representación
+    function updateCardCVC(value) {
+        const cardCVCDisplay = document.getElementById('card-cvc');
+        cardCVCDisplay.innerText = value ? value : 'CVC';
+    }
+
+    // Bootstrap validation script
+    (function () {
+        'use strict';
+        var forms = document.querySelectorAll('.needs-validation');
+        Array.prototype.slice.call(forms)
+            .forEach(function (form) {
+                form.addEventListener('submit', function (event) {
+                    if (!form.checkValidity()) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+    })();
+</script>

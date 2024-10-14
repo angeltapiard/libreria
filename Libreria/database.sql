@@ -33,8 +33,11 @@ CREATE TABLE Usuarios (
 
 CREATE TABLE MetodosPago (
     MetodoPagoID INT IDENTITY(1,1) PRIMARY KEY,
-    Nombre NVARCHAR(100) NOT NULL,
-    Descripcion NVARCHAR(255)
+    TipoTarjeta NVARCHAR(50) NOT NULL,
+    NumeroTarjeta NVARCHAR(20) NOT NULL,
+    TitularTarjeta NVARCHAR(100) NOT NULL,
+    FechaVencimiento DATE NOT NULL,
+    CVC NVARCHAR(4) NOT NULL
 );
 
 CREATE TABLE Carrito (
@@ -55,19 +58,15 @@ CREATE TABLE Pedidos (
     PedidoID INT IDENTITY(1,1) PRIMARY KEY,
     UsuarioID INT FOREIGN KEY REFERENCES Usuarios(UsuarioID),
     FechaPedido DATETIME DEFAULT GETDATE(),
-    Total DECIMAL(10, 2) NOT NULL,
-    MetodoPagoID INT FOREIGN KEY REFERENCES MetodosPago(MetodoPagoID),
-    Estado NVARCHAR(50) NOT NULL CHECK (Estado IN ('Pendiente', 'Enviado', 'Entregado', 'Cancelado')),
-    DireccionEnvio NVARCHAR(255) NOT NULL
+    Calle NVARCHAR(255) NOT NULL,               -- Columna para la calle
+    Municipio NVARCHAR(255) NOT NULL,           -- Columna para el municipio
+    Provincia NVARCHAR(255) NOT NULL,           -- Columna para la provincia
+    Estado NVARCHAR(50) NOT NULL,               -- Nueva columna para el estado del pedido
+    Total DECIMAL(18, 2)
+                -- Nueva columna para el total del pedido
 );
 
-CREATE TABLE ItemsPedido (
-    ItemPedidoID INT IDENTITY(1,1) PRIMARY KEY,
-    PedidoID INT FOREIGN KEY REFERENCES Pedidos(PedidoID),
-    LibroID INT FOREIGN KEY REFERENCES Libros(id),
-    SeparadorID INT FOREIGN KEY REFERENCES Separador(SeparadorID),
-    Cantidad INT NOT NULL CHECK (Cantidad > 0)
-);
+
 
 --CREATE PROCEDURE RegistrarUsuario
 --    @Nombre NVARCHAR(100),

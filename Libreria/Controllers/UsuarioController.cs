@@ -4,7 +4,6 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace Libreria.Controllers
 {
@@ -178,19 +177,33 @@ namespace Libreria.Controllers
             return usuario;
         }
 
-        // Acción Eliminar: Elimina un usuario por su ID
-        [HttpPost]
-        public IActionResult Eliminar(int id)
-        {
-            var usuario = ObtenerUsuarioPorId(id);
-            if (usuario == null)
-            {
-                return NotFound();
-            }
 
-            EliminarUsuario(id);
-            return RedirectToAction("Index");
+        // Método privado para eliminar los registros del carrito del usuario
+        private void EliminarCarritosDelUsuario(int usuarioId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                // Primero eliminamos los Items del Carrito asociados con los Carritos del usuario
+                var eliminarItemsQuery = @"DELETE FROM ItemsCarrito 
+                                   WHERE CarritoID IN (SELECT CarritoID FROM Carrito WHERE UsuarioID = @id)";
+                using (var command = new SqlCommand(eliminarItemsQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@id", usuarioId);
+                    command.ExecuteNonQuery();
+                }
+
+                // Luego eliminamos los Carritos del usuario
+                var eliminarCarritoQuery = "DELETE FROM Carrito WHERE UsuarioID = @id";
+                using (var command = new SqlCommand(eliminarCarritoQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@id", usuarioId);
+                    command.ExecuteNonQuery();
+                }
+            }
         }
+
 
         // Método privado para eliminar un usuario de la base de datos
         private void EliminarUsuario(int id)
@@ -207,7 +220,6 @@ namespace Libreria.Controllers
                 }
             }
         }
-
 
         // Método privado para actualizar los datos de un usuario
         private void ActualizarUsuario(Usuario usuario)
@@ -235,5 +247,42 @@ namespace Libreria.Controllers
                 }
             }
         }
+        private void EliminarPedidosDelUsuario(int usuarioId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                // Eliminar todos los pedidos relacionados con el usuario
+                var eliminarPedidosQuery = "DELETE FROM Pedidos WHERE UsuarioID = @id";
+
+                using (var command = new SqlCommand(eliminarPedidosQuery, connection))
+                {
+                    command.Parameters.AddWithValue("@id", usuarioId);
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        [HttpPost]
+        public IActionResult Eliminar(int id)
+        {
+            var usuario = ObtenerUsuarioPorId(id);
+            if (usuario == null)
+            {
+                return NotFound();
+            }
+
+            // Primero eliminamos los pedidos asociados al usuario
+            EliminarPedidosDelUsuario(id);
+
+            // Luego eliminamos los carritos asociados al usuario
+            EliminarCarritosDelUsuario(id);
+
+            // Finalmente eliminamos el usuario
+            EliminarUsuario(id);
+
+            return RedirectToAction("Index");
+        }
+
     }
 }

@@ -260,6 +260,38 @@ namespace Libreria.Controllers
             }
 
             throw new Exception("Usuario no encontrado.");
+     
+        
         }
+        [HttpPost]
+        public IActionResult EliminarSeleccionados(List<int> selectedItems)
+        {
+            using (SqlConnection conn = new SqlConnection(_connectionString))
+            {
+                conn.Open();
+                try
+                {
+                    foreach (var itemId in selectedItems)
+                    {
+                        string queryEliminarItem = "DELETE FROM ItemsCarrito WHERE ItemCarritoID = @ItemCarritoID";
+                        using (SqlCommand cmd = new SqlCommand(queryEliminarItem, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@ItemCarritoID", itemId);
+                            cmd.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (SqlException ex)
+                {
+                    // Manejo de errores SQL
+                    ModelState.AddModelError("", "Error al eliminar los ítems del carrito: " + ex.Message);
+                    return RedirectToAction("Index");
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
+
     }
 }

@@ -1,0 +1,218 @@
+﻿@model IEnumerable<Libreria.Models.Pedido>
+
+<!-- Agregar enlaces a Bootstrap, Font Awesome y DataTables -->
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css">
+
+<style>
+    /* Personalización del diseño */
+    body {
+        font-family: Arial, sans-serif; /* Cambia la fuente según tu diseño preferido */
+        background-color: #f8f9fa; /* Color de fondo suave */
+    }
+
+    h2 {
+        color: #343a40; /* Color del título */
+        margin-bottom: 20px; /* Espacio debajo del título */
+    }
+
+    .table {
+        background-color: white; /* Color de fondo de la tabla */
+        border-radius: 0.5rem; /* Bordes redondeados para la tabla */
+    }
+
+    /* Cambiar el fondo del encabezado a blanco y texto negro en negrita */
+    .thead-custom th {
+        background-color: white; /* Fondo blanco para el encabezado */
+        color: #000; /* Color de texto negro */
+        font-weight: bold; /* Texto en negrita */
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f2f2f2; /* Color alternativo para filas impares */
+    }
+
+    .input-group select {
+        height: 38px; /* Altura del select */
+    }
+
+    /* Colores para los estados, coincidiendo con los botones */
+    .por-enviar {
+        background-color: #ffc107; /* Color del botón "Por Enviar" (Amarillo) */
+        color: #000; /* Texto en negro para mejor legibilidad */
+    }
+
+    .enviado {
+        background-color: #17a2b8; /* Color del botón "Enviado" (Cyan) */
+        color: #fff; /* Texto en blanco para mejor legibilidad */
+    }
+
+    .completado {
+        background-color: #28a745; /* Color del botón "Completado" (Verde) */
+        color: #fff; /* Texto en blanco para mejor legibilidad */
+    }
+    
+    /* Estilos para pantallas pequeñas */
+    @@media (max-width: 576px) {
+        .table thead {
+            display: none; /* Ocultar el encabezado en pantallas pequeñas */
+        }
+
+        .table tbody tr {
+            display: block; /* Mostrar las filas como bloques */
+            margin-bottom: 10px;
+        }
+
+        .table tbody td {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .table tbody td::before {
+            content: attr(data-label); /* Mostrar las etiquetas de las celdas */
+            font-weight: bold;
+        }
+    }
+</style>
+
+<div class="container-fluid mt-1">
+    <h2 class="text-center">Lista de Pedidos</h2>
+
+    <!-- Botones de filtro -->
+    <div class="d-flex justify-content-center mb-3">
+        <button type="button" class="btn btn-warning mx-1" onclick="filtrarPorEstado('Por Enviar')">
+            <strong class="text-white">Por Enviar</strong>
+        </button>
+        <button type="button" class="btn btn-info mx-1" onclick="filtrarPorEstado('Enviado')">
+            <strong class="text-white">Enviado</strong>
+        </button>
+        <button type="button" class="btn btn-success mx-1" onclick="filtrarPorEstado('Completado')">
+            <strong class="text-white">Completado</strong>
+        </button>
+        <button type="button" class="btn btn-secondary mx-1" onclick="filtrarPorEstado('Todos')">
+            <strong class="text-white">Mostrar Todos</strong>
+        </button>
+    </div>
+
+    <div class="table-responsive">
+        <table id="pedidosTable" class="table table-striped table-bordered">
+            <thead class="thead-custom">
+                <tr>
+                    <th>Pedido-ID</th>
+                    <th>Fecha</th>
+                    <th>Usuario</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th>Calle</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var pedido in Model)
+                {
+                    <tr class="estado-fila @(pedido.Estado == "Por Enviar" ? "por-enviar" : pedido.Estado == "Enviado" ? "enviado" : "completado")" data-estado="@pedido.Estado">
+                        <td data-label="Pedido ID">@pedido.PedidoID</td>
+                        <td data-label="Fecha de Pedido">@pedido.FechaPedido.ToString("dd/MM/yyyy")</td>
+                        <td data-label="Usuario">@pedido.Email</td>
+                        <td data-label="Provincia">@pedido.Provincia</td>
+                        <td data-label="Municipio">@pedido.Municipio</td>
+                        <td data-label="Calle">@pedido.Calle</td>
+                        <td data-label="Total">@pedido.Total.ToString("C")</td>
+                        <td data-label="Estado" class="estado">
+                            <strong>@pedido.Estado</strong>
+                            <form asp-action="EditarEstado" method="post" style="display:inline;">
+                                <div class="input-group mt-2">
+                                    <select name="nuevoEstado" class="custom-select estado-select" required onchange="cambiarColorEstado(this)">
+                                        <option value="" disabled selected>Modificar</option>
+                                        <option value="Por Enviar">Por Enviar</option>
+                                        <option value="Enviado">Enviado</option>
+                                        <option value="Completado">Completado</option>
+                                    </select>
+                                    <input type="hidden" name="pedidoId" value="@pedido.PedidoID" />
+                                    <button type="submit" class="btn btn-primary ml-2" data-bs-toggle="tooltip" data-bs-placement="top" title="Actualizar Estado">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Inicializar DataTable
+            $('#pedidosTable').DataTable({
+                "paging": true,
+                "searching": true,
+                "info": true,
+                "lengthChange": true,
+                "pageLength": 10,
+                "language": {
+                    "search": "Buscar:",
+                    "lengthMenu": "Mostrar _MENU_ registros por página",
+                    "zeroRecords": "No se encontraron resultados",
+                    "info": "Mostrando página _PAGE_ de _PAGES_",
+                    "infoEmpty": "No hay registros disponibles",
+                    "infoFiltered": "(filtrado de _MAX_ registros en total)",
+                    "paginate": {
+                        "first": "Primero",
+                        "last": "Último",
+                        "next": "Siguiente",
+                        "previous": "Anterior"
+                    }
+                }
+            });
+
+            // Inicializar tooltips de Bootstrap
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+
+        function cambiarColorEstado(selectElement) {
+            var estado = selectElement.value; // Obtener el valor seleccionado
+            var trEstado = selectElement.closest('tr'); // Obtener la fila que contiene el estado
+
+            // Remover las clases de estado anteriores
+            trEstado.classList.remove('por-enviar', 'enviado', 'completado');
+
+            // Añadir la clase correspondiente según el estado seleccionado
+            if (estado === 'Por Enviar') {
+                trEstado.classList.add('por-enviar');
+            } else if (estado === 'Enviado') {
+                trEstado.classList.add('enviado');
+            } else if (estado === 'Completado') {
+                trEstado.classList.add('completado');
+            }
+        }
+
+        // Función para filtrar por estado
+        function filtrarPorEstado(estado) {
+            var filas = document.querySelectorAll('.estado-fila');
+
+            filas.forEach(function (fila) {
+                var estadoFila = fila.getAttribute('data-estado');
+
+                if (estado === 'Todos' || estadoFila === estado) {
+                    fila.style.display = ''; // Mostrar la fila
+                } else {
+                    fila.style.display = 'none'; // Ocultar la fila
+                }
+            });
+        }
+    </script>
+}

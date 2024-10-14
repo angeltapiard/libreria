@@ -23,8 +23,12 @@ namespace Libreria.Controllers
             int totalLibros = 0;
             int totalSeparadores = 0;
             int totalUsuarios = 0; // Agregada la variable totalUsuarios
+            int totalPorEnviar = 0; // Total de pedidos por enviar
+            int totalEnviados = 0; // Total de pedidos enviados
+            int totalCompletados = 0; // Total de pedidos completados
             var librosPorGenero = new Dictionary<string, int>();
 
+            // Aquí comienza el bloque using para abrir la conexión
             using (SqlConnection conn = new SqlConnection(_connectionString))
             {
                 conn.Open();
@@ -55,15 +59,39 @@ namespace Libreria.Controllers
                         totalUsuarios = resultTotalUsuarios != DBNull.Value ? Convert.ToInt32(resultTotalUsuarios) : 0;
                     }
 
+                    // Obtener el total de pedidos por enviar
+                    string queryTotalPorEnviar = "SELECT COUNT(*) FROM Pedidos WHERE Estado = 'Por Enviar'"; // Ajusta la consulta según tu estructura de tabla
+                    using (SqlCommand cmdTotalPorEnviar = new SqlCommand(queryTotalPorEnviar, conn))
+                    {
+                        var resultTotalPorEnviar = cmdTotalPorEnviar.ExecuteScalar();
+                        totalPorEnviar = resultTotalPorEnviar != DBNull.Value ? Convert.ToInt32(resultTotalPorEnviar) : 0;
+                    }
+
+                    // Obtener el total de pedidos enviados
+                    string queryTotalEnviados = "SELECT COUNT(*) FROM Pedidos WHERE Estado = 'Enviado'"; // Ajusta la consulta según tu estructura de tabla
+                    using (SqlCommand cmdTotalEnviados = new SqlCommand(queryTotalEnviados, conn))
+                    {
+                        var resultTotalEnviados = cmdTotalEnviados.ExecuteScalar();
+                        totalEnviados = resultTotalEnviados != DBNull.Value ? Convert.ToInt32(resultTotalEnviados) : 0;
+                    }
+
+                    // Obtener el total de pedidos completados
+                    string queryTotalCompletados = "SELECT COUNT(*) FROM Pedidos WHERE Estado = 'Completado'"; // Ajusta la consulta según tu estructura de tabla
+                    using (SqlCommand cmdTotalCompletados = new SqlCommand(queryTotalCompletados, conn))
+                    {
+                        var resultTotalCompletados = cmdTotalCompletados.ExecuteScalar();
+                        totalCompletados = resultTotalCompletados != DBNull.Value ? Convert.ToInt32(resultTotalCompletados) : 0;
+                    }
+
                     // Obtener la cantidad de libros por género
                     string queryGenero = @"
-                SELECT Genero, COUNT(*) AS Cantidad
-                FROM (
-                    SELECT TRIM(value) AS Genero
-                    FROM Libros
-                    CROSS APPLY STRING_SPLIT(Genero, ',')
-                ) AS Gen
-                GROUP BY Genero";
+                    SELECT Genero, COUNT(*) AS Cantidad
+                    FROM (
+                        SELECT TRIM(value) AS Genero
+                        FROM Libros
+                        CROSS APPLY STRING_SPLIT(Genero, ',')
+                    ) AS Gen
+                    GROUP BY Genero";
 
                     using (SqlCommand cmdGenero = new SqlCommand(queryGenero, conn))
                     {
@@ -93,10 +121,13 @@ namespace Libreria.Controllers
                 }
             }
 
-            // Pasar el total de libros, separadores y usuarios a la vista
+            // Pasar el total de libros, separadores, usuarios y pedidos a la vista
             ViewBag.TotalLibros = totalLibros;
             ViewBag.TotalSeparadores = totalSeparadores;
-            ViewBag.TotalUsuarios = totalUsuarios; // Agregada la variable TotalUsuarios
+            ViewBag.TotalUsuarios = totalUsuarios;
+            ViewBag.TotalPorEnviar = totalPorEnviar; // Total de pedidos por enviar
+            ViewBag.TotalEnviados = totalEnviados; // Total de pedidos enviados
+            ViewBag.TotalCompletados = totalCompletados; // Total de pedidos completados
 
             // Preparar los datos para el gráfico
             ViewBag.LibrosPorGenero = new
@@ -107,6 +138,5 @@ namespace Libreria.Controllers
 
             return View();
         }
-
     }
 }

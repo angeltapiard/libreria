@@ -1,0 +1,65 @@
+﻿/* Estilos para la tarjeta de crédito */
+.credit-card {
+    width: 450px; /* Doblado de ancho */
+    height: 270px; /* Doblado de altura */
+    border-radius: 10px;
+    background: linear-gradient(135deg, #003366, #006699); /* Degradado azul oscuro */
+    color: #ffffff;
+    padding: 20px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    margin-bottom: 20px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.card-logo {
+    display: flex;
+    align-items: center;
+}
+
+.card-body {
+    flex-grow: 1;
+    margin-top: 10px;
+}
+
+.card-number {
+    font-size: 2em; /* Aumento del tamaño de la fuente */
+    letter-spacing: 2px; /* Espaciado entre caracteres */
+    margin-top: 30px; /* Aumento del margen superior */
+}
+
+.card-name {
+    margin-top: 10px; /* Aumento del margen superior */
+    font-size: 1.5em; /* Aumento del tamaño de la fuente */
+}
+
+.card-expiry {
+    position: absolute;
+    bottom: 30px; /* Aumento del margen inferior */
+    left: 30px; /* Aumento de la posición izquierda */
+    font-size: 1.5em; /* Aumento del tamaño de la fuente */
+}
+
+.card-cvc {
+    position: absolute;
+    bottom: 30px; /* Aumento del margen inferior */
+    right: 30px; /* Aumento de la posición derecha */
+    font-size: 1.5em; /* Aumento del tamaño de la fuente */
+}
+
+.chip {
+    width: 75px; /* Aumento del tamaño de la chip */
+    height: 40px; /* Aumento del tamaño de la chip */
+    background-color: #fff;
+    border-radius: 5px;
+    position: absolute;
+    top: 30px; /* Aumento de la posición superior */
+    left: 30px; /* Aumento de la posición izquierda */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+}

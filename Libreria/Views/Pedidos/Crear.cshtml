@@ -1,0 +1,156 @@
+﻿@model Libreria.Models.Pedido
+
+@{
+    Layout = null;
+}
+@Html.Partial("_navbar")
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+<link href="~/css/bootstrap-icons.css" rel="stylesheet">
+
+<!-- INICIO Información del Pedido -->
+<div class="container mt-1" id="infoPedido">
+    <h5 class="text-dark fw-bold text-center" style="font-size: 1.75rem;">INFORMACIÓN DEL PEDIDO</h5>
+    <div class="card shadow" style="max-width: 800px; margin: auto; border-radius: 0;">
+        <div class="card-body">
+            <form method="post" action="@Url.Action("Crear", "Pedidos")">
+
+                <h6 class="text-primary mb-4">Datos de Contacto</h6>
+
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="email" class="form-label">
+                            <i class="bi bi-envelope"></i> Email:
+                        </label>
+                        <input type="email" class="form-control rounded" id="email" name="email" value="@Model.Email" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="telefono" class="form-label">
+                            <i class="bi bi-telephone"></i> Teléfono:
+                        </label>
+                        <input type="tel" class="form-control rounded" id="telefono" name="telefono" value="@Model.Telefono" readonly />
+                    </div>
+                </div>
+
+                <h6 class="text-primary mb-4">Fecha</h6>
+                <div class="mb-3">
+                    <label for="fechaPedido" class="form-label">
+                        <i class="bi bi-calendar"></i> Fecha del Pedido:
+                    </label>
+                    <input type="text" class="form-control rounded" id="fechaPedido" name="FechaPedido" value="@DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")" readonly />
+                </div>
+
+                <h6 class="text-primary mb-4">Dirección</h6>
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="provincia" class="form-label">
+                            <i class="bi bi-geo-alt"></i> Provincia:
+                        </label>
+                        <input type="text" class="form-control rounded" id="provincia" name="Provincia" required />
+                    </div>
+                    <div class="col-md-6">
+                        <label for="municipio" class="form-label">
+                            <i class="bi bi-geo-alt"></i> Municipio:
+                        </label>
+                        <input type="text" class="form-control rounded" id="municipio" name="Municipio" required />
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="calle" class="form-label">
+                        <i class="bi bi-geo-alt"></i> Calle:
+                    </label>
+                    <input type="text" class="form-control rounded" id="calle" name="Calle" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="estado" class="form-label">
+                        <i class="bi bi-check-circle"></i> Estado:
+                    </label>
+                    <select class="form-select rounded" id="estado" name="Estado" required>
+                        <option value="Por Enviar">Por Enviar</option>
+                    </select>
+                </div>
+
+                <form id="pedidoForm" asp-action="Crear" method="post">
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="bi bi-arrow-right"></i> Metodo de Pago
+                        </button>
+                       @*  <a href="@Url.Action("Crear", "MetodoPago")" class="btn btn-primary">
+                            <i class="bi bi-arrow-right"></i> Metodo de Pago
+                        </a> *@
+                    </div>
+                </form>
+
+                <script>
+                    document.getElementById('pedidoForm').addEventListener('submit', async function (event) {
+                        event.preventDefault(); // Prevenir el envío normal del formulario
+
+                        const formData = new FormData(this); // Obtener los datos del formulario
+
+                        try {
+                            const response = await fetch(this.action, {
+                                method: 'POST',
+                                body: formData,
+                            });
+
+                            if (response.ok) {
+                                // Si el envío fue exitoso, redirigir a la vista Crear del MetodoPago
+                                window.location.href = '@Url.Action("Crear", "MetodoPago")';
+                            } else {
+                                // Manejo de errores si el envío no fue exitoso
+                                const errorText = await response.text();
+                                alert('Error al realizar el pago: ' + errorText);
+                            }
+                        } catch (error) {
+                            console.error('Error:', error);
+                            alert('Error al realizar el pago.');
+                        }
+                    });
+                </script>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<br />
+<br />
+<!-- Footer con íconos de redes y contacto -->
+<footer style="background-color: #002B70;" class="text-white text-center py-4">
+    <div class="container">
+        <p>&copy; 2024 Librería El Maestro. Todos los derechos reservados.</p>
+
+        <p>
+            <i class="bi bi-telephone-fill"></i>
+            <a href="tel:+18096817079" class="text-white text-decoration-none"> 809-681-7079</a>
+        </p>
+
+        <p>
+            <i class="bi bi-envelope-fill"></i>
+            <a href="mailto:libmaestro@hotmail.com" class="text-white text-decoration-none"> libmaestro@hotmail.com</a>
+        </p>
+
+        <p>
+            <i class="bi bi-geo-alt-fill"></i>
+            Dirección: C/Padre Castellanos No. 91, Ensanche Espaillat, Santo Domingo, República Dominicana.
+        </p>
+
+        <hr class="border border-light my-4">
+
+        <p>Síguenos en nuestras redes sociales:</p>
+        <div>
+            <a href="https://facebook.com" class="text-white me-3">
+                <i class="bi bi-facebook" style="font-size: 2rem;"></i>
+            </a>
+            <a href="https://instagram.com" class="text-white">
+                <i class="bi bi-instagram" style="font-size: 2rem;"></i>
+            </a>
+        </div>
+    </div>
+</footer>
+<!-- FIN Información del Pedido -->
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

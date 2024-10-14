@@ -121,7 +121,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-light">
         <a class="navbar-brand" href="@Url.Action("Index", "Home")">
-            <img src="@Url.Content("~/img/4.png")" alt="Logo">
+            <img src="@Url.Content("~/img/2.jpg")" alt="Logo">
         </a>
 
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -183,13 +183,26 @@
                         </div>
                     </div>
 
-                    <!-- Icono de carrito con número de artículos -->
-                    <div class="nav-item">
-                        <a class="nav-link cart-icon" href="@Url.Action("Index", "Carrito")">
-                            <i class="bi bi-cart-fill"></i>
-                            <span class="badge">@ViewBag.CarritoCount</span>
-                        </a>
+                    <div class="d-flex align-items-center">
+                        <!-- Carrito de Compras -->
+                        <div class="nav-item">
+                            <!-- Sin margen -->
+                            <a class="nav-link cart-icon" href="@Url.Action("Index", "Carrito")" title="Ver Carrito de Compras">
+                                <i class="bi bi-cart-fill"></i>
+                                <span class="badge">@ViewBag.CarritoCount</span>
+                            </a>
+                        </div>
+
+                        <!-- Mis Pedidos -->
+                        <div class="nav-item ms-1">
+                            <!-- Añadir margen izquierdo pequeño -->
+                            <a class="nav-link cart-icon" href="@Url.Action("PedidosCliente", "Pedidos")" title="Ver Mis Pedidos">
+                                <i class="bi bi-receipt"></i>
+                            </a>
+                        </div>
                     </div>
+
+
                 }
                 else
                 {

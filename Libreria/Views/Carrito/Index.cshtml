@@ -8,8 +8,6 @@
 
 <div class="container mt-2">
     <h5 class="text-dark fw-bold text-center" style="font-size: 1.50rem;">CESTA DE COMPRA</h5>
-       
-        
 
     <form id="carritoForm" method="post" action="@Url.Action("EliminarSeleccionados", "Carrito")">
         <table class="table table-striped table-bordered table-sm" id="carritoTable">
@@ -17,7 +15,7 @@
                 <tr>
                     <th>Seleccionar</th>
                     <th>Artículo</th>
-                    <th class="text-center" style="width: 100px;">Cantidad</th> <!-- Clase Bootstrap y estilo para ancho -->
+                    <th class="text-center" style="width: 100px;">Cantidad</th>
                     <th>Precio Unitario</th>
                     <th class="text-center">Eliminar</th>
                 </tr>
@@ -43,7 +41,7 @@
                         }
                         else
                         {
-                            itemsAgrupados[key].Cantidad += item.Cantidad; // Sumar cantidades si ya existe
+                            itemsAgrupados[key].Cantidad += item.Cantidad;
                         }
                     }
 
@@ -79,7 +77,6 @@
                                 }
                             </td>
                             <td class="text-center">
-                                <!-- Centrar texto en la columna de cantidad -->
                                 <div class="input-group">
                                     <button type="button" class="btn btn-outline-secondary btn-sm" onclick="cambiarCantidad('@item.ItemCarritoID', -1)">-</button>
                                     <input type="text" name="cantidades[@item.ItemCarritoID]" value="@item.Cantidad" class="form-control form-control-sm text-center" readonly />
@@ -98,14 +95,10 @@
                             </td>
                             <td>
                                 <div class="text-center">
-                                    <form asp-action="EliminarItem" method="post">
-                                        <input type="hidden" name="itemId" value="@item.ItemCarritoID" />
-                                        <button type="submit" class="btn btn-danger btn-sm">
-                                            <i class="bi bi-trash"></i>
-                                        </button>
-                                    </form>
+                                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarItem('@item.ItemCarritoID')">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </div>
-
                             </td>
                         </tr>
                     }
@@ -113,13 +106,12 @@
             </tbody>
         </table>
 
-
         <div class="d-flex justify-content-between mt-4">
             <a href="@Url.Action("Index", "Home")" class="btn btn-primary btn-sm">Seguir comprando</a>
             <div>
                 <strong>Total a Pagar: $<span id="totalAPagar">0.00</span></strong>
             </div>
-            <a href="@Url.Action("Checkout", "Carrito")" class="btn btn-success btn-sm" id="btnProcederPago">Realizar Pedido</a>
+            <a href="@Url.Action("Crear", "Pedidos")" class="btn btn-success btn-sm" id="btnProcederPago">Realizar Pedido</a>
         </div>
     </form>
 </div>
@@ -135,26 +127,23 @@
         }
 
         cantidadInput.value = nuevaCantidad;
-        actualizarTotal(); // Actualiza el total al cambiar la cantidad
+        actualizarTotal();
     }
 
     function eliminarItem(itemId) {
-        // Hacer una solicitud AJAX para eliminar el ítem del carrito
         fetch('@Url.Action("EliminarItem", "Carrito")', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': '@@AntiForgeryToken()'
+                'X-CSRF-TOKEN': '@Html.AntiForgeryToken()'
             },
-            body: JSON.stringify({ id: itemId })
+            body: JSON.stringify({ itemId: itemId })
         })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Eliminar la fila del ítem del carrito en la vista
+            .then(response => {
+                if (response.ok) {
                     const row = document.querySelector(`tr[data-item-id='${itemId}']`);
                     row.remove();
-                    actualizarTotal(); // Actualizar el total después de la eliminación
+                    actualizarTotal();
                 } else {
                     alert("Hubo un error al eliminar el ítem.");
                 }
@@ -176,85 +165,37 @@
         document.getElementById('totalAPagar').innerText = total.toFixed(2);
     }
 
-    // Llamar a actualizarTotal al cargar la página por si hay elementos preseleccionados
     document.addEventListener('DOMContentLoaded', actualizarTotal);
 </script>
 
-<style>
-    .table td, .table th {
-        vertical-align: middle;
-        font-size: 0.9rem; /* Tamaño de fuente reducido */
-    }
-
-    .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f9f9f9;
-    }
-
-    .table-bordered {
-        border: 1px solid #dee2e6;
-    }
-
-        .table-bordered td, .table-bordered th {
-            border: 1px solid #dee2e6;
-        }
-
-    .btn-outline-secondary {
-        transition: background-color 0.3s, color 0.3s;
-    }
-
-        .btn-outline-secondary:hover {
-            background-color: #e2e6ea;
-            color: #212529;
-        }
-
-    h2 {
-        font-weight: 600;
-        letter-spacing: 1px;
-    }
-
-    .icon-cart {
-        font-size: 1.5rem;
-        color: #333;
-        margin-right: 0.5rem;
-    }
-
-    .header-cart {
-        display: flex;
-        justify-content center;
-        align-items: center;
-    }
-</style>
+<link rel="stylesheet" href="@Url.Content("~/css/vistacarro.css")">
 
 <br />
-<br>
-<!-- Footer -->
+<br />
+
+<!-- Footer con íconos de redes y contacto -->
 <footer style="background-color: #002B70;" class="text-white text-center py-4">
     <div class="container">
         <p>&copy; 2024 Librería El Maestro. Todos los derechos reservados.</p>
-
         <p>
             <i class="bi bi-telephone-fill"></i>
-            <a href="#" target="_blank" class="text-white text-decoration-none">809-681-7079</a>
+            <a href="tel:+18096817079" class="text-white text-decoration-none"> 809-681-7079</a>
         </p>
-
         <p>
             <i class="bi bi-envelope-fill"></i>
-            <a href="#" target="_blank" class="text-white text-decoration-none">libmaestro@hotmail.com</a>
+            <a href="mailto:libmaestro@hotmail.com" class="text-white text-decoration-none"> libmaestro@hotmail.com</a>
         </p>
-
         <p>
             <i class="bi bi-geo-alt-fill"></i>
             Dirección: C/Padre Castellanos No. 91, Ensanche Espaillat, Santo Domingo, República Dominicana.
         </p>
-
         <hr class="border border-light my-4">
-
         <p>Síguenos en nuestras redes sociales:</p>
         <div>
-            <a href="#" target="_blank" class="text-white me-3">
+            <a href="https://facebook.com" class="text-white me-3">
                 <i class="bi bi-facebook" style="font-size: 2rem;"></i>
             </a>
-            <a href="#" target="_blank" class="text-white">
+            <a href="https://instagram.com" class="text-white">
                 <i class="bi bi-instagram" style="font-size: 2rem;"></i>
             </a>
         </div>

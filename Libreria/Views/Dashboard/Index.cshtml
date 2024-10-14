@@ -1,10 +1,10 @@
 ﻿<!-- Main Content -->
 <div class="container-fluid mt-4">
-    <!-- container-fluid para mantener el diseño general -->
     <div class="row">
         @{
             ViewData["Title"] = "Dashboard";
         }
+        <hr />
 
         <div class="row">
             <!-- Cantidad Total de Libros Card -->
@@ -13,7 +13,7 @@
                     <div class="card-body d-flex flex-column justify-content-between">
                         <h5 class="card-title">Libros <span>| Total General</span></h5>
                         <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #007bff;">
                                 <i class="bi bi-book"></i>
                             </div>
                             <div class="ps-3">
@@ -29,7 +29,7 @@
                     <div class="card-body d-flex flex-column justify-content-between">
                         <h5 class="card-title">Separadores <span>| Total</span></h5>
                         <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #007bff;">
                                 <i class="bi bi-bookmark"></i>
                             </div>
                             <div class="ps-3">
@@ -45,12 +45,11 @@
                     <div class="card-body d-flex flex-column justify-content-between">
                         <h5 class="card-title">Usuarios <span>| Total</span></h5>
                         <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center">
-                                <i class="bi bi-person"></i> <!-- Icono para usuarios -->
+                            <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #007bff;">
+                                <i class="bi bi-person"></i>
                             </div>
                             <div class="ps-3">
-                                <h6 class="total-separadores">@String.Format("{0:n0}", ViewBag.TotalUsuarios)</h6>
-                              @*   <h6 class="total-usuarios">@String.Format("{0:n0}", )</h6> <!-- Usar ViewBag.TotalUsuarios con formato --> *@
+                                <h6 class="total-usuarios">@String.Format("{0:n0}", ViewBag.TotalUsuarios)</h6>
                             </div>
                         </div>
                     </div>
@@ -58,22 +57,85 @@
             </div><!-- End Total Usuarios Card -->
         </div>
 
-    <div class="row">
-        <!-- Card for the Bar Chart -->
-        @if (ViewBag.LibrosPorGenero != null && ViewBag.LibrosPorGenero.Genres.Length > 0)
-        {
-            <div class="col-12 mb-4">
-                <!-- Se mantiene el ancho completo para el gráfico -->
-                <div class="card">
-                    <div class="card-body p-0">
-                        <h5 class="card-title p-3">Total de Libros por Género</h5>
-                        <div class="chart-container" style="position: relative; height:500px; width:100%;">
-                            <canvas id="librosPorGeneroChart"></canvas>
+        <hr class="my-4 styled-hr" /> <!-- Estilo de Bootstrap para el hr -->
+        <h5 class="mt-4 fw-bold">Pedidos</h5> <!-- Texto en negrita -->
+
+        <div class="row">
+            <!-- Total Por Enviar Card -->
+            <div class="col-xxl-3 col-md-6 mb-4">
+                <a href="@Url.Action("Index", "Pedidos", new { estado = "Por Enviar" })" class="text-decoration-none">
+                    <div class="card info-card sales-card">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">Por Enviar</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #FFC107;">
+                                    <i class="bi bi-box"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6 class="total-pedidos">@String.Format("{0:n0}", ViewBag.TotalPorEnviar)</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Total Por Enviar Card -->
+            <!-- Total Enviados Card -->
+            <div class="col-xxl-3 col-md-6 mb-4">
+                <a href="@Url.Action("Index", "Pedidos", new { estado = "Enviado" })" class="text-decoration-none">
+                    <div class="card info-card sales-card">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">Enviados</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #17A2B8;">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6 class="total-pedidos">@String.Format("{0:n0}", ViewBag.TotalEnviados)</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Total Enviados Card -->
+            <!-- Total Completados Card -->
+            <div class="col-xxl-3 col-md-6 mb-4">
+                <a href="@Url.Action("Index", "Pedidos", new { estado = "Completado" })" class="text-decoration-none">
+                    <div class="card info-card sales-card">
+                        <div class="card-body d-flex flex-column justify-content-between">
+                            <h5 class="card-title">Completados</h5>
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="card-icon rounded-circle d-flex align-items-center justify-content-center" style="background-color: #28A745;">
+                                    <i class="bi bi-check-all"></i>
+                                </div>
+                                <div class="ps-3">
+                                    <h6 class="total-pedidos">@String.Format("{0:n0}", ViewBag.TotalCompletados)</h6>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div><!-- End Total Completados Card -->
+        </div><!-- End Row -->
+
+        <hr class="my-4 styled-hr" /> <!-- Estilo de Bootstrap para el hr -->
+
+        <div class="row">
+            <!-- Card for the Bar Chart -->
+            @if (ViewBag.LibrosPorGenero != null && ViewBag.LibrosPorGenero.Genres.Length > 0)
+            {
+                <div class="col-12 mb-4">
+                    <!-- Se mantiene el ancho completo para el gráfico -->
+                    <div class="card">
+                        <div class="card-body p-0">
+                            <h5 class="card-title p-3">Total de Libros por Género</h5>
+                            <div class="chart-container" style="position: relative; height:500px; width:100%;">
+                                <canvas id="librosPorGeneroChart"></canvas>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 </div>
 
@@ -90,7 +152,6 @@
     .card-icon {
         width: 3rem;
         height: 3rem;
-        background-color: #D9F9EA;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -99,10 +160,10 @@
 
         .card-icon i {
             font-size: 1.5rem;
-            color: #00CD72;
+            color: #fff; /* Cambiado a blanco para mejor contraste */
         }
 
-    .total-libros, .total-separadores {
+    .total-libros, .total-separadores, .total-usuarios, .total-pedidos {
         font-size: 1.5rem;
         font-weight: bold;
         color: #333; /* Color del texto para mejor visibilidad */
@@ -113,33 +174,27 @@
         margin-bottom: 1.5rem;
     }
 
+    /* Estilo personalizado para el hr */
+    .styled-hr {
+        border: 1px solid #007bff; /* Color igual al btn-primary */
+        margin: 20px 0; /* Espaciado superior e inferior */
+        border-radius: 5px; /* Bordes redondeados */
+    }
+
     /* Ajustes del gráfico */
     .chart-container {
         position: relative;
         height: 500px;
         width: 100%;
     }
-
-    /* Mantener los estilos correctos para la tarjeta de total de libros y separadores */
-    .card-body {
-        padding: 1rem !important; /* Añadir de nuevo el padding adecuado */
-    }
-
-    canvas {
-        width: 100% !important;
-        height: 100% !important;
-    }
 </style>
 
-<!-- Add Chart.js script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<!-- Add the script to initialize the chart -->
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var ctx = document.getElementById('librosPorGeneroChart').getContext('2d');
 
-        // Define an array of colors for each bar
         var colors = [
             'rgba(255, 99, 132, 0.2)',
             'rgba(54, 162, 235, 0.2)',

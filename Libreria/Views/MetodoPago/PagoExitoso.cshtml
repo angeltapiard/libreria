@@ -1,0 +1,134 @@
+﻿@{
+    Layout = null;
+}
+@Html.Partial("_navbar")
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="~/css/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        /* Estilo personalizado para centrar el contenido */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .hide {
+            display: none;
+        }
+
+        .card-success {
+            border-color: #28a745; /* Color verde */
+        }
+
+            .card-success .card-header {
+                background-color: #28a745; /* Color verde */
+                color: white;
+            }
+
+            .card-success .btn {
+                background-color: #28a745; /* Botón verde */
+                border: none;
+            }
+
+                .card-success .btn:hover {
+                    background-color: #218838; /* Hover para el botón */
+                }
+
+        .icon-container {
+            font-size: 3rem; /* Tamaño de los iconos */
+            margin: 1rem 0; /* Espaciado alrededor de los iconos */
+        }
+
+        .payment-icon {
+            color: #28a745; /* Color de los iconos */
+            margin: 0 10px; /* Espaciado entre los iconos */
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner-border text-success" role="status">
+            <span class="sr-only">Cargando...</span>
+        </div>
+    </div>
+
+    <div class="container mt-5">
+        <div class="card card-success text-center">
+            <div class="card-header">
+                <h5 class="mb-0">¡PAGO EXITOSO!</h5>
+            </div>
+            <div class="card-body">
+                <p class="card-text">Su pedido será enviado en menos de 24 horas.</p>
+                <p class="text-muted">¡Gracias por su compra!</p>
+
+                <div class="icon-container">
+                    <i class="fab fa-cc-visa payment-icon"></i>
+                    <i class="fab fa-cc-mastercard payment-icon"></i>
+                    <i class="fab fa-cc-amex payment-icon"></i> <!-- Icono de American Express -->
+                </div>
+
+                <p class="text-muted">Métodos de pago aceptados</p>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <!-- Footer con íconos de redes y contacto -->
+    <footer style="background-color: #002B70;" class="text-white text-center py-4">
+        <div class="container">
+            <p>&copy; 2024 Librería El Maestro. Todos los derechos reservados.</p>
+
+            <p>
+                <i class="bi bi-telephone-fill"></i>
+                <a href="tel:+18096817079" class="text-white text-decoration-none"> 809-681-7079</a>
+            </p>
+
+            <p>
+                <i class="bi bi-envelope-fill"></i>
+                <a href="mailto:libmaestro@hotmail.com" class="text-white text-decoration-none"> libmaestro@hotmail.com</a>
+            </p>
+
+            <p>
+                <i class="bi bi-geo-alt-fill"></i>
+                Dirección: C/Padre Castellanos No. 91, Ensanche Espaillat, Santo Domingo, República Dominicana.
+            </p>
+
+            <hr class="border border-light my-4">
+
+            <p>Síguenos en nuestras redes sociales:</p>
+            <div>
+                <a href="https://facebook.com" class="text-white me-3">
+                    <i class="bi bi-facebook" style="font-size: 2rem;"></i>
+                </a>
+                <a href="https://instagram.com" class="text-white">
+                    <i class="bi bi-instagram" style="font-size: 2rem;"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // Ocultar el spinner después de 3 segundos
+        setTimeout(function () {
+            document.getElementById("loadingScreen").classList.add("hide");
+        }, 3000);
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

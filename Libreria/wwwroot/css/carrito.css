@@ -1,0 +1,42 @@
+﻿.table td, .table th {
+    vertical-align: middle;
+    font-size: 0.9rem;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f9f9f9;
+}
+
+.table-bordered {
+    border: 1px solid #dee2e6;
+}
+
+    .table-bordered td, .table-bordered th {
+        border: 1px solid #dee2e6;
+    }
+
+.btn-outline-secondary {
+    transition: background-color 0.3s, color 0.3s;
+}
+
+    .btn-outline-secondary:hover {
+        background-color: #e2e6ea;
+        color: #212529;
+    }
+
+h2 {
+    font-weight: 600;
+    letter-spacing: 1px;
+}
+
+.icon-cart {
+    font-size: 1.5rem;
+    color: #333;
+    margin-right: 0.5rem;
+}
+
+.header-cart {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

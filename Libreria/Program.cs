@@ -38,7 +38,7 @@ app.UseStaticFiles(); // Permite el acceso a archivos estáticos
 
 app.UseRouting(); // Habilita el enrutamiento
 
-// Usa la sesión antes de la autorización
+// Usa la sesión antes de la autenticación
 app.UseSession(); // Activa la funcionalidad de sesión
 
 app.UseAuthentication(); // Activa la autenticación

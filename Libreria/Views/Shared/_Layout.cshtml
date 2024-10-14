@@ -45,8 +45,8 @@
     <header id="header" class="header fixed-top d-flex align-items-center">
         <div class="d-flex align-items-center justify-content-between">
             <a href="@Url.Action("Index", "Home")" class="logo d-flex align-items-center">
-                <img src="@Url.Content("~/img/libro.png")" alt="Logo">
-                <h5 style="font-weight: bold; color: black;">LIBRERIA EL MAESTRO</h5>
+                <img src="@Url.Content("~/img/2.jpg")" alt="Logo">
+                <img src="@Url.Content("~/img/3.jpg")" alt="Logo">
             </a>
             <i class="bi bi-list toggle-sidebar-btn"></i>
         </div>
@@ -109,6 +109,13 @@
                     <span>Usuarios</span>
                 </a>
             </li>
+
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="@Url.Action("Index", "Pedidos")">
+                    <i class="bi bi-receipt"></i>
+                    <span>Pedidos</span>
+                </a>
+            </li> 
             <li class="nav-item">
                 <form asp-controller="Login" asp-action="Logout" method="post" style="display: inline;">
                     <button type="submit" class="nav-link collapsed">
